@@ -1,0 +1,61 @@
+.editor {
+  border: solid 1px #ccc;
+  padding: 18rem;
+  height: 100%;
+  /**min-height:200px;**/
+}
+
+.sample-toolbar {
+  border: solid 1px #ddd;
+  background: #f4f4f4;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.sample-toolbar > span {
+  cursor: pointer;
+}
+
+.sample-toolbar > span:hover {
+  text-decoration: underline;
+}
+.fa {
+  color: black;
+}
+
+.sidebar {
+  width: 20%;
+  margin-left: -1rem;
+  height: 100%;
+  /* padding-bottom: 30rem; */
+}
+
+.content {
+  width: calc(100% - 250px);
+  height: 100vh;
+  position: fixed;
+  margin-left: 10rem;
+}
+
+.full {
+  margin-left: 2rem;
+}
+
+.blur {
+  backdrop-filter: blur(20px);
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 998;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+}
+.overlay.over {
+  display: block;
+  opacity: 1;
+}
