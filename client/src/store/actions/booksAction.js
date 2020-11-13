@@ -107,12 +107,6 @@ export const addPage = (page) => {
 export const createPage = (page) => (dispatch) => {
   axios
     .post("api/books/addpage", page)
-    .then((res) => {
-      // let payload = {
-      //   chapterId : res.data.chapter_id,
-      //   page: res.data,
-      // }
-      // dispatch(addPage(res.data));
-    })
+    .then((res) => {})
     .catch((err) => console.log(err));
 };

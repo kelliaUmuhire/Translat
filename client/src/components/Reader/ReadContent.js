@@ -3,103 +3,171 @@ import { stateToHTML } from "draft-js-export-html";
 import { convertFromRaw, ContentState } from "draft-js";
 import ReactHtmlParser from "react-html-parser";
 import { connect } from "react-redux";
+import _, { size } from "lodash";
 import axios from "axios";
 
 import ContentBar from "../Sidebar/ContentBar";
-import checkUndefined from "../../utils/checkUndefined";
 import "./css/ReadContent.css";
 
 class ReadContent extends Component {
   state = {
-    rawContent: this.props.location.state.data.chapters[0].pages[0].content,
-    pageNum: this.props.location.state.data.chapters[0].pages[0].num,
-    chapName: this.props.location.state.data.chapters[0].name,
+    tableOfContent: null,
+    rawContent: JSON.stringify({ text: "this is the placeholder" }),
+    pageNum: 0,
+    chapName: "",
+    pageId: null,
     chapIndex: 0,
     pageIndex: 0,
     resPages: null,
+  };
+
+  componentDidMount() {
+    console.log(this.props.location.state.data.chapters.length);
+    if (this.props.location.state.data.chapters[0].pages[0] !== undefined) {
+      axios
+        .get(
+          `api/books/getpage/${this.props.location.state.data.chapters[0].pages[0]._id}`
+        )
+        .then((res) => {
+          this.setState({
+            rawContent: res.data.content,
+            pageNum: res.data.num,
+            chapName: this.props.location.state.data.chapters[0].name,
+          });
+        });
+    }
+  }
+
+  tempGet = () => {
+    axios
+      .get(
+        `api/books/bookcontent/${this.this.props.location.state.data.book.bookId}`
+      )
+      .then((res) => res.data);
+  };
+
+  setPage = (pageId) => {
+    if (pageId) {
+      axios
+        .get(`api/books/getpage/${pageId}`)
+        .then((res) => {
+          this.setState({
+            rawContent: res.data.content,
+            pageNum: res.data.num,
+          });
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   prevPage = () => {
     const data = { ...this.props.location.state.data };
     const chapLength = data.chapters.length;
     const pagesNum = data.chapters[0].pages.length;
-    if (this.state.chapIndex === chapLength) {
+    if (this.state.chapIndex < 0) {
       console.log("No more chapters");
       return 0;
     }
     if (this.state.pageIndex - 1 < pagesNum && this.state.pageIndex - 1 > -1) {
       this.setState({
         pageIndex: this.state.pageIndex - 1,
-        rawContent:
-          data.chapters[this.state.chapIndex].pages[this.state.pageIndex - 1]
-            .content,
         pageNum:
           data.chapters[this.state.chapIndex].pages[this.state.pageIndex - 1]
             .num,
       });
+
+      this.setPage(
+        this.props.location.state.data.chapters[this.state.chapIndex].pages[
+          this.state.pageIndex - 1
+        ]._id
+      );
     } else {
-      console.log("No more pages");
-      return 0;
+      //move to previous chapter if any
+      if (this.props.location.state.data.chapters[this.state.chapIndex - 1]) {
+        if (
+          !_.isEmpty(
+            this.props.location.state.data.chapters[this.state.chapIndex - 1]
+              .pages
+          )
+        ) {
+          let holder =
+            this.props.location.state.data.chapters[this.state.chapIndex - 1]
+              .pages.length - 1;
+          this.setState({
+            pageIndex: holder,
+            chapIndex: this.state.chapIndex - 1,
+            pageNum: this.props.location.state.data.chapters[
+              this.state.chapIndex - 1
+            ].pages[holder].num,
+          });
+
+          this.setPage(
+            this.props.location.state.data.chapters[this.state.chapIndex - 1]
+              .pages[holder]._id
+          );
+        } else {
+          console.log("No more pages");
+          return 0;
+        }
+      }
     }
   };
 
   nextPage = () => {
-    const data = { ...this.props.location.state.data };
-    const chapLength = data.chapters.length;
-    const pagesNum = data.chapters[0].pages.length;
-    let resPages;
+    const chapLength = this.props.location.state.data.chapters.length;
+    const pagesNum = this.props.location.state.data.chapters[
+      this.state.chapIndex
+    ].pages.length;
 
     //Check for no more chapters
     if (this.state.chapIndex === chapLength) {
       console.log("No more chapters");
       return 0;
     }
+    console.log(this.state.pageIndex, chapLength);
 
-    //move to next page
+    // //move to next page
     if (this.state.pageIndex + 1 < pagesNum) {
-      //check if we got resPages
-      console.log(this.state.pageIndex);
+      console.log(`${this.state.pageIndex + 1} < ${pagesNum}`);
+      //   //check if we got resPages
+      //   console.log(this.state.pageIndex);
       this.setState({
         pageIndex: this.state.pageIndex + 1,
-        pageNum:
-          data.chapters[this.state.chapIndex].pages[this.state.pageIndex + 1]
-            .num,
+        pageNum: this.props.location.state.data.chapters[this.state.chapIndex]
+          .pages[this.state.pageIndex + 1].num,
       });
-      console.log(this.state.pageIndex);
+      // console.log(this.state.pageIndex);
 
-      if (this.state.resPages !== null) {
-        this.setState({ rawContent: resPages[this.state.pageIndex + 1] });
-      } else {
-        this.setState({
-          rawContent:
-            data.chapters[this.state.chapIndex].pages[this.state.pageIndex + 1]
-              .content,
-        });
-      }
+      this.setPage(
+        this.props.location.state.data.chapters[this.state.chapIndex].pages[
+          this.state.pageIndex + 1
+        ]._id
+      );
     } else {
       //move to the next chapter pages if any
-      if (data.chapters[this.state.chapIndex + 1]) {
-        axios
-          .get(
-            `api/books/getpagesinchap/${
-              data.chapters[this.state.chapIndex + 1].chapterId
-            }`
+      if (this.props.location.state.data.chapters[this.state.chapIndex + 1]) {
+        if (
+          !_.isEmpty(
+            this.props.location.state.data.chapters[this.state.chapIndex + 1]
+              .pages
           )
-          .then((res) => {
-            console.log(res.data);
-            resPages = res.data;
-          })
-          .catch((err) => console.log(err));
-        this.setState({
-          pageIndex: 0,
-          chapIndex: this.state.chapIndex + 1,
-          rawContent: resPages[0].content,
-          pageNum: resPages[0].num,
-          resPages: resPages,
-        });
-      } else {
-        console.log("No more pages");
-        return 0;
+        ) {
+          this.setState({
+            pageIndex: 0,
+            chapIndex: this.state.chapIndex + 1,
+            pageNum: this.props.location.state.data.chapters[
+              this.state.chapIndex + 1
+            ].pages[0].num,
+          });
+
+          this.setPage(
+            this.props.location.state.data.chapters[this.state.chapIndex + 1]
+              .pages[0]._id
+          );
+        } else {
+          console.log("No more pages");
+          return 0;
+        }
       }
     }
   };
@@ -107,20 +175,21 @@ class ReadContent extends Component {
   render() {
     let showContent;
     let temp = JSON.parse(this.state.rawContent);
-    console.log(temp);
     if (temp.text === undefined) {
       showContent = stateToHTML(
         convertFromRaw(JSON.parse(this.state.rawContent))
       );
     } else {
-      showContent = stateToHTML(
-        ContentState.createFromText("Add your content")
-      );
+      showContent = stateToHTML(ContentState.createFromText("Hold on"));
     }
 
     return (
       <div className="read">
-        <div className="fash-bottom sticky-top" id="fash-bottom">
+        <div
+          className="fash-bottom sticky-top"
+          id="fash-bottom"
+          style={{ fontSize: "inherit" }}
+        >
           <div
             className="coll float-left"
             data-toggle="collapse"
@@ -129,11 +198,20 @@ class ReadContent extends Component {
             <i className="fas fa-bars"></i>
           </div>
           <div className="bname">
-            {this.props.location.state.data.book.name}
+            {this.props.location.state.data.book.bookName}
           </div>
 
-          <div id="bar" className="border shadow" style={{ width: "40%" }}>
-            <ContentBar data={this.props.book} />
+          <div
+            id="bar"
+            className="border shadow bg-primary"
+            style={{ width: "40%" }}
+          >
+            <ContentBar
+              data={this.props.book}
+              bookId={this.props.location.state.data.book.bookId}
+              click={this.setPage}
+              contentTable={this.props.location.state.data}
+            />
           </div>
         </div>
         <div
@@ -150,7 +228,7 @@ class ReadContent extends Component {
             className="chapName"
             style={{ textAlign: "center", paddingBottom: "1rem" }}
           >
-            {this.state.chapName}
+            {this.props.location.state.data.chapters[this.state.chapIndex].name}
           </div>
           <div className="">{ReactHtmlParser(showContent)}</div>
           <div className="pageNum align-center" style={{ textAlign: "center" }}>
@@ -163,7 +241,7 @@ class ReadContent extends Component {
                 className="btn bg-light p-3"
                 onClick={this.prevPage}
               >
-                <i class="fas fa-arrow-alt-circle-left"></i>
+                <i className="fas fa-arrow-alt-circle-left"></i>
               </button>
             </div>
             <div>

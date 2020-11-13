@@ -1,7 +1,6 @@
-//uploadbook, readbook(send book URL)
-// books = { bookName: title, }
 const mongoose = require("mongoose");
 const fs = require("fs");
+const _ = require("lodash");
 
 const Book = require("../models/Book");
 const User = require("../models/User");
@@ -101,7 +100,7 @@ const BookController = {
           book_id: newChapter.book_id,
           name: req.body.name,
         }).then((chap) => {
-          //         //update
+          ////update
           if (chap) {
             console.log("Updating chapter");
             Chapter.findOneAndUpdate(
@@ -110,7 +109,7 @@ const BookController = {
               { new: true }
             )
               .then((chap) => {
-                console.log(chap);
+                console.log("Chapter updated");
                 res.send(chap);
               })
               .catch((err) => console.log(err));
@@ -121,8 +120,14 @@ const BookController = {
               newChapter
                 .save()
                 .then((chap) => {
-                  console.log(chap);
-                  res.send(chap);
+                  let tempChap = {
+                    name: chap.name,
+                    chapterId: chap._id,
+                    pages: [],
+                  };
+                  console.log("Added new chapter");
+                  console.log(tempChap);
+                  res.send(tempChap);
                 })
                 .catch((err) => console.log(err));
             });
@@ -134,6 +139,19 @@ const BookController = {
     });
   },
 
+  updateChapter(req, res) {
+    Chapter.findOneAndUpdate(
+      { _id: req.params.chapterId, book_id: req.body.bookId },
+      { name: req.body.name },
+      { new: true }
+    )
+      .then((chap) => {
+        console.log(chap);
+        res.send(chap);
+      })
+      .catch((err) => console.log(err));
+  },
+
   createPage(req, res) {
     const newPage = new Page({
       content: JSON.stringify(req.body.content),
@@ -143,17 +161,18 @@ const BookController = {
       .then((chap) => {
         newPage.chapter_id = chap._id;
         newPage.book_id = chap.book_id;
-        newPage.num = chap.pageNumber + 1;
+        newPage.num = ++chap.pageNumber;
         newPage
           .save()
           .then((page) => {
             console.log(page);
-            Chapter.findOneAndUpdate(
-              { _id: chap._id },
-              { pageNumber: chap.pageNumber + 1 },
+            let tempPage = _.pick(page, ["_id", "num"]);
+            Chapter.findByIdAndUpdate(
+              { _id: req.body.chapterId },
+              { pageNumber: chap.pageNumber },
               { new: true }
             )
-              .then((ans) => res.send(page))
+              .then((ans) => res.send(tempPage))
               .catch((err) => console.log(err));
           })
           .catch((err) => console.log(err));
@@ -208,6 +227,12 @@ const BookController = {
         .then((pages) => res.send(pages))
         .catch((err) => console.log(err));
     });
+  },
+
+  getPage(req, res) {
+    Page.findById({ _id: req.params.pageId })
+      .then((page) => res.send(page))
+      .catch((err) => console.log(err));
   },
 
   getEverything(req, res) {
@@ -276,12 +301,12 @@ const BookController = {
   },
 
   deleteChapter(req, res) {
-    Chapter.findByIdAndRemove({ _id: req.params.chapId })
+    Chapter.findOneAndRemove({ _id: req.params.chapId })
       .then((chap) => {
         Page.deleteMany({ chapter_id: req.params.chapId })
           .then((page) => {
             console.log("Chapter removed!");
-            res.send({ success: true });
+            res.send(chap);
           })
           .catch((err) => console.log(err));
       })
@@ -291,10 +316,61 @@ const BookController = {
   deletePage(req, res) {
     Page.findByIdAndRemove({ _id: req.params.pageId })
       .then((page) => {
-        Chapter.update({ _id: page.chapter_id }, { $inc: { pageNumber: +1 } });
-        Page.update({ chapter_id: page.chapter_id }, { $inc: { num: -1 } });
-        console.log("All set");
-        res.send({ success: true });
+        // Chapter.update({ _id: page.chapter_id }, { $inc: { pageNumber: +1 } });
+        // Page.update({ chapter_id: page.chapter_id }, { $inc: { num: -1 } });
+        Chapter.findByIdAndUpdate(
+          { _id: page.chapter_id },
+          { $inc: { pageNumber: -1 } }
+        ).then((chap) => {
+          for (let i = 0; i < chap.pageNumber; i++) {
+            Page.findOneAndUpdate(
+              { chapter_id: page.chapter_id, num: i + 1 },
+              { $inc: { num: -1 } }
+            );
+          }
+          console.log("All set");
+          res.send(page);
+        });
+      })
+      .catch((err) => console.log(err));
+  },
+
+  bookContent(req, res) {
+    let content = {
+      book: {},
+      chapters: [],
+    };
+    Book.findById({ _id: req.params.bookId })
+      .then((book) => {
+        if (book) {
+          content.book.bookName = book.title;
+          content.book.author = book.author;
+          content.book.bookId = book._id;
+          Chapter.find({ book_id: book._id }).then((chaps) => {
+            for (let i = 0; i < chaps.length; i++) {
+              Page.find({ chapter_id: chaps[i]._id })
+                .then((pages) => {
+                  //   data.chapters[i].pages = page;
+                  //   data.pages = page;
+                  let tempPages = pages.map((x) => _.pick(x, ["_id", "num"]));
+                  let temp = {
+                    name: chaps[i].name,
+                    chapterId: chaps[i]._id,
+                    pages: tempPages,
+                  };
+                  // content.chapters.splice(content.chapters.length, 0, temp);
+                  let len = content.chapters.length;
+                  content.chapters[len] = temp;
+                  if (i === chaps.length - 1) {
+                    console.log(content);
+                    res.send(content);
+                  }
+                })
+                .catch((err) => console.log(err));
+            }
+            // res.send(content);
+          });
+        }
       })
       .catch((err) => console.log(err));
   },

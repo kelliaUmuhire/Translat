@@ -87,11 +87,17 @@ class Book extends Component {
 
   readBook = () => {
     axios
-      .get(`api/books/getall/${this.props.bookId}`)
+      .get(`api/books/bookcontent/${this.props.bookId}`)
       .then((res) => {
-        this.props.history.push({
-          pathname: "/readcontent",
-          state: { data: res.data },
+        console.log(res.data);
+        setTimeout(() => {
+          this.props.history.push(
+            {
+              pathname: "/readcontent",
+              state: { data: { ...res.data } },
+            },
+            2000
+          );
         });
       })
       .catch((err) => console.log(err));
@@ -118,7 +124,7 @@ class Book extends Component {
               <div className="edge-border"></div>
             </div>
           </div>
-          <div className="options card bg-secondary rounded-circle align-center">
+          <div className="options card bg-secondary rounded-pill align-center">
             <div className="card-body">
               <div className="card-text pr-2" onClick={this.editBook}>
                 <i className="fas fa-edit"></i>

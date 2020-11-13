@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import axios from "axios";
 import {
   Editor,
   EditorState,
@@ -12,6 +13,7 @@ import "draft-js/dist/Draft.css";
 import Axios from "axios";
 import debounce from "lodash/debounce";
 import { stateToHTML } from "draft-js-export-html";
+import _, { reduce } from "lodash";
 
 import "./WriteBook.css";
 import Sidebar from "../../Sidebar/Sidebar";
@@ -23,61 +25,38 @@ class WriteBook extends Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       content: {},
-      editorContentHtml: null,
+      tableOfContent: null,
       show: false,
       pageId: checkUndefined(this.props.book.chapters[0].pages[0])
         ? this.props.book.chapters[0].pages[0]
         : null,
     };
     this.onChange = this.onChange.bind(this);
-    this._onBoldClick = this._onBoldClick.bind(this);
     this.setPage = this.setPage.bind(this);
-    // this.saveContent = this.saveContent.bind(this);
+  }
+
+  componentDidMount() {
+    axios
+      .get(`api/books/bookcontent/${this.props.book.book.bookId}`)
+      .then((res) => {
+        this.setState({ tableOfContent: res.data });
+      })
+      .catch((err) => console.log(err));
   }
 
   onChange = (editorState) => {
     const contentState = editorState.getCurrentContent();
-    this.saveContent(contentState);
-    // console.log('content state', convertToRaw(contentState));
+    // this.saveContent(contentState);
     this.setState({
       content: contentState,
       editorContentHtml: stateToHTML(editorState.getCurrentContent()),
     });
     this.setState({ editorState });
-    console.log(editorState);
   };
 
-  saveContent = debounce((content) => {
+  saveContent = () => {
     let pageId = this.state.pageId;
-    // let temp = this.props.location.state.data.chapters[0].pages[0].content;
-    // console.log(
-    //   EditorState.createWithContent(
-    //     ContentState.createFromText(
-    //       this.props.location.state.data.chapters[0].pages[0].content
-    //     )
-    //   )
-    // );
-    // EditorState.createWithContent(
-    //   convertFromRaw(JSON.parse(this.props.book.chapters[0].pages[0].content))
-    // )
-
-    // const blocks = convertFromRaw(
-    //   JSON.parse(this.props.location.state.data.chapters[0].pages[0].content)
-    // );
-
-    // console.log(blocks);
-
-    // const temp2 = ContentState.createFromBlockArray(
-    //   convertFromRaw(
-    //     this.props.location.state.data.chapters[0].pages[0].content
-    //   )
-    // );
-    // console.log(`temp1${temp}`);
-    // console.log(
-    //   EditorState.createWithContent(
-    //     ContentState.createFromBlockArray(convertFromRaw(temp))
-    //   )
-    // );
+    let content = this.state.editorState.getCurrentContent();
     Axios.post(
       `api/books/updatepage/${pageId}`,
       { content: convertToRaw(content) },
@@ -85,11 +64,7 @@ class WriteBook extends Component {
     )
       .then((res) => console.log("saved"))
       .catch((err) => console.log(err));
-  }, 1000);
-
-  // saveAll = () => {
-
-  // }
+  };
 
   handleKeyCommand(command, editorState) {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -100,10 +75,6 @@ class WriteBook extends Component {
     }
     return "not-handled";
   }
-
-  _onBoldClick = () => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
-  };
 
   goToRead = () => {
     const { editorState } = this.state;
@@ -118,50 +89,132 @@ class WriteBook extends Component {
     this.setState({ show: !this.state.show });
   };
 
-  setPage = (pageId, content) => {
+  setPage = (pageId) => {
     console.log("Clicked!!!");
-    let temp = JSON.parse(content);
-    let editorState = null;
-    console.log(temp.text);
-    if (temp.text === undefined) {
-      editorState = EditorState.createWithContent(convertFromRaw(temp));
-    } else {
-      editorState = EditorState.createWithContent(
-        ContentState.createFromText("Add your content")
-      );
-    }
+    axios
+      .get(`api/books/getpage/${pageId}`)
+      .then((res) => {
+        let temp = JSON.parse(res.data.content);
+        let editorState = null;
 
-    this.setState({
-      pageId: pageId,
-      editorState: editorState,
+        if (temp.text === undefined) {
+          editorState = EditorState.createWithContent(convertFromRaw(temp));
+        } else {
+          editorState = EditorState.createWithContent(
+            ContentState.createFromText("Add your content")
+          );
+        }
+
+        this.setState({
+          pageId: pageId,
+          editorState: editorState,
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  newPage = (chapterId) => {
+    const newPage = {
+      content: {
+        text: "Add your content",
+      },
+      chapterId: chapterId,
+    };
+
+    axios
+      .post("api/books/addpage", newPage)
+      .then((res) => {
+        let temp = _.cloneDeep(this.state.tableOfContent);
+        let tempIndex = temp.chapters.findIndex(
+          (x) => x.chapterId === chapterId
+        );
+        console.log(tempIndex);
+        // console.log(temp.chapters[tempIndex].pages);
+        temp.chapters[tempIndex].pages.push(res.data);
+        // console.log(temp);
+        this.setState({ tableOfContent: temp });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  deletePage = (pageId) => {
+    axios
+      .post(`api/books/deletepage/${pageId}`)
+      .then((res) => {
+        let temp = _.cloneDeep(this.state.tableOfContent);
+        let tempIndex = temp.chapters.findIndex(
+          (x) => x.chapterId === res.data.chapter_id
+        );
+        let tempIndexPage = temp.chapters[tempIndex].pages.findIndex(
+          (x) => x.chapter_id === res.data.chapter_id
+        );
+        temp.chapters[tempIndex].pages.splice(tempIndexPage, 1);
+        this.setState({ tableOfContent: temp });
+        console.log("Page deleted");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  newChapter = (chapName) => {
+    const newChap = {
+      name: chapName,
+      bookId: this.state.tableOfContent.book.bookId,
+    };
+
+    axios
+      .post("api/books/addchapter", newChap)
+      .then((res) => {
+        let temp = _.cloneDeep(this.state.tableOfContent);
+        temp.chapters.push(res.data);
+        console.log(temp);
+        this.setState({ tableOfContent: temp });
+      })
+      .catch((err) => console.log(err));
+    // window.location.reload(false);
+  };
+
+  deleteChapter = (chapterId) => {
+    axios.post(`api/books/deletechapter/${chapterId}`).then((res) => {
+      let temp = _.cloneDeep(this.state.tableOfContent);
+      let tempIndex = temp.chapters.findIndex(
+        (x) => x.chapterId === res.data._id
+      );
+      temp.chapters.splice(tempIndex, 1);
+      this.setState({ tableOfContent: temp });
+      console.log("Chapter deleted!");
     });
   };
 
   render() {
     return (
-      <div>
-        <div className="container full">
+      <div className="container">
+        <div className="row">
           {/* <div className="sidebar bg-dark mt-5 rounded-left col-2 mr-0 collapse sidebar-collapse" id="sidebarResponsive">This is the sidebar</div> */}
-          <div className="sidebar ">
+          <div className="sidebar col-2">
             <Sidebar
               show={this.state.show}
               data={this.props.book}
+              contentTable={this.state.tableOfContent}
               setPage={this.setPage}
               pageId={this.state.pageId}
               hide={this.showOrHide}
+              newpage={this.newPage}
+              newchapter={this.newChapter}
+              deletepage={this.deletePage}
+              deletechap={this.deleteChapter}
             />
           </div>
-          <div className="full">
-            <button
+          <div className="content shadow col-10 col-sm-10">
+            {/* <button
               type="button"
               id="sidebarCollapse"
               className="btn btn-info"
               onClick={this.showOrHide}
             >
               <i className="fas fa-align-left"></i>
-            </button>
-            <button onClick={this.saveAll} className="bg-light btn ml-5">
-              Save
+            </button> */}
+            <button onClick={this.saveContent} className="bg-light btn ml-5">
+              <i className="fas fa-save"></i> Save
             </button>
             <Editor
               editorState={this.state.editorState}
@@ -171,10 +224,10 @@ class WriteBook extends Component {
           </div>
         </div>
 
-        <div
+        {/* <div
           className={`overlay ${this.state.show ? "" : "over"} `}
           style={{ marginTop: "-8rem" }}
-        ></div>
+        ></div> */}
       </div>
     );
   }

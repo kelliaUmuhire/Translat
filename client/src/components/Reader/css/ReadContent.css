@@ -32,7 +32,8 @@
   );
   backdrop-filter: grayscale(21px);
   /* border-image-slice: 1; */
-  position: relative;
+  position: sticky;
+  top: 0;
   padding: 60px;
   /* top: 0; */
 }

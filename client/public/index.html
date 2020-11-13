@@ -56,6 +56,20 @@
     />
 
     <title>React App</title>
+    <style>
+      body {
+        background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
+        background-size: cover;
+        /* height: 100%; */
+        height: 100vh;
+        /* background-size: contain;
+        width: 100%;
+        height: 100%; */
+      }
+      #root {
+        position: relative;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -88,7 +102,7 @@
         });
       });
     </script> -->
-    <script>
+    <script type="text/javascript">
       window.onscroll = function () {
         scrollFunction();
       };
@@ -98,12 +112,13 @@
           document.body.scrollTop > 50 ||
           document.documentElement.scrollTop > 50
         ) {
-          document.getElementById("fash-bottom").style.padding = "8px";
+          document.getElementById("fash-bottom").style.padding = "10px";
         } else {
           document.getElementById("fash-bottom").style.padding = "60px";
         }
       }
     </script>
+    <span class="temp" id="fash-bottom" style="font: inherit"></span>
 
     <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>

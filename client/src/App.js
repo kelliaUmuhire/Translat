@@ -13,6 +13,7 @@ import WriteBook from "./components/Ostroy/WriteBook/WriteBook";
 import ReadContent from "./components/Reader/ReadContent";
 //temp
 import Sidebar from "./components/Sidebar/Sidebar";
+import Footer from "./components/Layout/Footer/Footer";
 import { store, persistor } from "./store";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route exact path="/writebook" component={WriteBook} />
             <Route exact path="/readcontent" component={ReadContent} />
             <Route exact path="/sidebar" component={Sidebar} />
+            {/* <Footer /> solving issues*/}
           </div>
         </Router>
       </PersistGate>

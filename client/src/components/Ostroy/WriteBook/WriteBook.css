@@ -24,18 +24,39 @@
 }
 
 .sidebar {
-  width: 20%;
-  margin-left: -1rem;
+  /* width: 20%; */
+  /* margin-left: 5rem; */
   height: 100%;
+  margin-top: "20rem";
+  font-size: 15px;
   /* padding-bottom: 30rem; */
 }
 
 .content {
-  width: calc(100% - 250px);
+  width: calc(100% - 330px);
   height: 100vh;
   position: fixed;
-  margin-left: 10rem;
+  margin-left: 11rem;
+  background: rgb(255, 255, 255);
+  overflow: scroll;
+  /* position: fixed; */
+  /* margin-left: 10rem; */
 }
+
+.content::-webkit-scrollbar {
+  width: 8px; /* width of the entire scrollbar */
+}
+.content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.747); /* color of the tracking area */
+}
+.content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.432); /* color of the scroll thumb */
+  border-radius: 20px; /* roundness of the scroll thumb */
+}
+
+/* .content:child {
+  margin-left: 10rem;
+} */
 
 .full {
   margin-left: 2rem;

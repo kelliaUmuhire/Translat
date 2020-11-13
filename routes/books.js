@@ -93,4 +93,10 @@ router.post("/deletepage/:pageId", BookController.deletePage);
 
 router.get("/getall/:bookId", BookController.getEverything);
 
+router.get("/bookcontent/:bookId", BookController.bookContent);
+
+router.get("/getpage/:pageId", BookController.getPage);
+
+router.post("/updatechapter/:chapterId", BookController.updateChapter);
+
 module.exports = router;

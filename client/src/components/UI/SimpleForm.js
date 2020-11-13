@@ -33,7 +33,7 @@ class SimpleForm extends Component {
               borderStyle: "hidden",
               padding: "1rem",
             }}
-            onClick={this.props.newChapter}
+            onClick={this.props.click}
           >
             {add}
           </button>
