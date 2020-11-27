@@ -1,0 +1,16 @@
+.stories {
+  margin-top: 6rem;
+}
+
+.row {
+  margin-top: 0 !important;
+}
+
+.head {
+  color: #522546;
+}
+
+button {
+  background-color: #522546;
+  color: #e23e57;
+}

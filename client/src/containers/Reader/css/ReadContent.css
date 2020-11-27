@@ -1,0 +1,112 @@
+.fash-bottom {
+  /* -moz-border-image: -moz-linear-gradient(
+    to left,
+    #79cc9e 0%,
+    #beedec 25%,
+    #c5ceff 50%,
+    #cabd96 75%,
+    #b591c7 100%
+  );
+  -webkit-border-image: -webkit-linear-gradient(
+    to left,
+    #79cc9e 0%,
+    #beedec 25%,
+    #c5ceff 50%,
+    #cabd96 75%,
+    #b591c7 100%
+  ); */
+  /* background: linear-gradient(
+    to left,
+    #79cc9e 0%,
+    #beedec 25%,
+    #c5ceff 50%,
+    #cabd96 75%,
+    #b591c7 100%
+  ); */
+  /* background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%); */
+  background: #c94b4b; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #4b134f,
+    #c94b4b
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #4b134f,
+    #c94b4b
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  backdrop-filter: grayscale(21px);
+  /* border-image-slice: 1; */
+  /* position: sticky; */
+  margin-top: 80px;
+  position: fixed;
+  padding: 60px;
+  width: calc(100% + 20px);
+  margin-left: -7.4rem;
+  /* z-index: 1999; */
+  /* top: 0; */
+}
+
+.fash-bottom .coll,
+.fash-bottom .bname {
+  display: inline-block;
+  padding-right: 27rem;
+}
+
+.fash-bottom .coll {
+  margin-left: -1rem;
+}
+
+/* .fash-bottom .bname {
+  align-self: center;
+}
+.fash-bottom .coll {
+  margin-left: -50%;
+} */
+
+#bar {
+  position: absolute;
+  background: #4b134f;
+}
+/* .read {
+  display: inline;
+} */
+
+/* @media screen and (min-device-width: 1200px) and (max-device-width: 1600px) and (-webkit-min-device-pixel-ratio: 2) and (min-resolution: 192dpi) {
+  .fash-bottom {
+    margin-left: -16rem;
+  }
+} */
+
+/* For 1024 Resolution */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .fash-bottom {
+    margin-left: -6rem;
+  }
+}
+
+/*Laptop*/
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .fash-bottom {
+    margin-top: 40px;
+    margin-left: -11.2rem;
+  }
+}
+/*Laptop 2*/
+@media only screen and (min-device-width: 700px) and (max-device-width: 767px) {
+  .fash-bottom {
+    margin-top: 50px;
+    margin-left: -7.1rem;
+  }
+}
+
+/*mobile*/
+/* For 640 Resolution */
+@media only screen and (min-device-width: 360px) and (max-device-width: 640px) {
+  .fash-bottom {
+    margin-top: 50px;
+    margin-left: -1.9rem;
+    /* margin-right: -10rem; */
+  }
+}

@@ -147,7 +147,7 @@ const BookController = {
     )
       .then((chap) => {
         console.log(chap);
-        res.send(chap);
+        res.send({ success: true });
       })
       .catch((err) => console.log(err));
   },
@@ -186,7 +186,7 @@ const BookController = {
     // console.log(update);
     Page.findByIdAndUpdate(req.params.pageId, update)
       .then((page) => {
-        res.send(page);
+        res.send({ success: true });
       })
       .catch((err) => console.log(err));
   },
@@ -199,7 +199,7 @@ const BookController = {
         if (book) {
           data.book = book;
           Chapter.find({ book_id: book._id }).then((chaps) => {
-            if (chaps) {
+            if (chaps[0] !== undefined) {
               data.chaps = chaps;
               Page.find({
                 chapter_id: chaps[0]._id,
@@ -278,30 +278,37 @@ const BookController = {
   },
 
   deleteBook(req, res) {
-    Book.findByIdAndRemove({ _id: req.params.bookId })
+    Book.findByIdAndDelete({ _id: req.params.bookId })
       .then((book) => {
-        res.send(book);
-        fs.unlinkSync("public/bookCover/" + getFileName(book.bookCover));
-        //  console.log('deleting!!!!!!!!!!!!!!')
-        if (book.bookURL !== "db") {
-          return fs.unlinkSync("public/book/" + getFileName(book.bookURL));
+        if (book) {
+          // res.send(book);
+          fs.unlinkSync("public/bookCover/" + getFileName(book.bookCover));
+          //  console.log('deleting!!!!!!!!!!!!!!')
+          if (book.bookURL !== "db") {
+            fs.unlinkSync("public/book/" + getFileName(book.bookURL));
+            res.send(book);
+          } else {
+            Chapter.deleteMany({ book_id: req.params.bookId }).then(
+              (chapter) => {
+                console.log("Deleting chapters");
+                Page.deleteMany({ book_id: req.params.bookId })
+                  .then((page) => {
+                    console.log("Book deleted!");
+                    res.send({ success: true });
+                  })
+                  .catch((err) => console.log(err));
+              }
+            );
+          }
         } else {
-          Chapter.deleteMany({ book_id: req.params.bookId }).then((chapter) => {
-            console.log("Deleting chapters");
-            Page.deleteMany({ book_id: req.params.bookId })
-              .then((page) => {
-                console.log("Book deleted!");
-                res.send({ success: true });
-              })
-              .catch((err) => console.log(err));
-          });
+          res.send("book not found");
         }
       })
       .catch((err) => console.log(err));
   },
 
   deleteChapter(req, res) {
-    Chapter.findOneAndRemove({ _id: req.params.chapId })
+    Chapter.findOneAndDelete({ _id: req.params.chapId })
       .then((chap) => {
         Page.deleteMany({ chapter_id: req.params.chapId })
           .then((page) => {
@@ -348,14 +355,19 @@ const BookController = {
           content.book.bookId = book._id;
           Chapter.find({ book_id: book._id }).then((chaps) => {
             for (let i = 0; i < chaps.length; i++) {
+              //Check if the chapter is published
+              // if (chaps[i].published) {
               Page.find({ chapter_id: chaps[i]._id })
                 .then((pages) => {
                   //   data.chapters[i].pages = page;
                   //   data.pages = page;
-                  let tempPages = pages.map((x) => _.pick(x, ["_id", "num"]));
+                  let tempPages = pages.map((x) =>
+                    _.pick(x, ["_id", "num", "published"])
+                  );
                   let temp = {
                     name: chaps[i].name,
                     chapterId: chaps[i]._id,
+                    published: chaps[i].published,
                     pages: tempPages,
                   };
                   // content.chapters.splice(content.chapters.length, 0, temp);
@@ -367,11 +379,84 @@ const BookController = {
                   }
                 })
                 .catch((err) => console.log(err));
+              // } else {
+              //   console.log("chapter not published");
+              // }
             }
             // res.send(content);
           });
         }
       })
+      .catch((err) => console.log(err));
+  },
+
+  getOne(req, res) {
+    Book.findById({ _id: req.params.bookId })
+      .then((book) => {
+        console.log("book sent");
+        res.send(_.pick(book, ["_id", "bookCover", "bookURL"]));
+      })
+      .catch((err) => console.log(err));
+  },
+
+  ///Publishing///////
+  publishBook(req, res) {
+    Book.findByIdAndUpdate(
+      { _id: req.params.bookId },
+      { published: true }
+    ).then((book) => {
+      console.log("Book published!");
+      res.send(book);
+    });
+  },
+  publishChapter(req, res) {
+    Chapter.findByIdAndUpdate(
+      { _id: req.params.chapterId },
+      { published: true }
+    ).then((chapter) => {
+      console.log("Chapter published!");
+      res.send(chapter);
+    });
+  },
+  publishPage(req, res) {
+    Page.findByIdAndUpdate(
+      { _id: req.params.pageId },
+      { published: true }
+    ).then((page) => {
+      console.log("Page published!");
+      res.send(page);
+    });
+  },
+
+  temporarlyGet(req, res) {
+    let data = [];
+    Book.find({ userId: req.user.id })
+      .then((books) => {
+        // data.books.push(books);
+        for (let i = 0; i < books.length; i++) {
+          let temp = {
+            bookId: "",
+            bookName: "",
+            chapters: "",
+          };
+          temp.bookId = books[i]._id;
+          temp.bookName = books[i].title;
+          temp.published = books[i].published;
+          Chapter.find({ book_id: books[i]._id }).then((chaps) => {
+            temp.chapters = _.cloneDeep(chaps);
+            data.push(temp);
+            if (i == books.length - 1) {
+              res.send(data);
+            }
+          });
+        }
+      })
+      .catch((err) => console.log(err));
+  },
+
+  getBrowserBooks(req, res) {
+    Book.find({ published: true })
+      .then((books) => res.send(books))
       .catch((err) => console.log(err));
   },
 };

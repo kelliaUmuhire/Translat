@@ -56,6 +56,8 @@ require("./models/User");
 require("./models/Book");
 require("./models/Chapter");
 require("./models/Page");
+require("./models/Library");
+require("./models/Profile");
 
 // Body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -72,6 +74,8 @@ require("./config/passport")(passport);
 app.use("/api/books", require("./routes/books"));
 
 app.use("/api/users", require("./routes/users"));
+app.use("/api/library", require("./routes/library"));
+app.use("/api/profile", require("./routes/profile"));
 // app.use('/uploadfile', require('./routes/api/books'));
 
 app.listen(port, () => console.log(`App listening at port ${port}`));

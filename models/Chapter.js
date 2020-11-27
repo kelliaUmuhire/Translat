@@ -17,6 +17,10 @@ const ChapterSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  published: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("chapters", ChapterSchema);

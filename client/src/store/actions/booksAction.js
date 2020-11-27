@@ -110,3 +110,44 @@ export const createPage = (page) => (dispatch) => {
     .then((res) => {})
     .catch((err) => console.log(err));
 };
+
+export const addLibrary = (payload) => {
+  return {
+    type: actionTypes.ADD_LIBRARY,
+    payload: payload,
+  };
+};
+
+export const getLibrary = (userId) => (dispatch) => {
+  axios
+    .get(`api/library/${userId}`)
+    .then((res) => dispatch(addLibrary(res.data)))
+    .catch((err) => console.log(err));
+};
+
+export const set_books = (payload) => {
+  return {
+    type: actionTypes.SET_BOOKS,
+    payload: payload,
+  };
+};
+
+export const get_books = () => (dispatch) => {
+  axios
+    .get("api/books/tempget")
+    .then((res) => dispatch(set_books(res.data)))
+    .catch((err) => console.log(err));
+};
+
+export const addBookToLibrary = (book) => {
+  return {
+    type: actionTypes.ADD_BOOK_TO_LIBRARY,
+    payload: book,
+  };
+};
+
+// export const remove_book = (bookId) => dispatch => {
+//   return {
+//     type: actionTypes.REMOVE_FROM_DASH
+//   }
+// }

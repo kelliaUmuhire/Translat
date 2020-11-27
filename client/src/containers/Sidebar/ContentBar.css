@@ -1,0 +1,11 @@
+.contentbar {
+  padding-top: "10px";
+  color: rgba(255, 255, 255, 0.829);
+}
+
+.contentbar ul li {
+  list-style: none;
+}
+.contentbar ul li ul {
+  margin-left: "200rem";
+}

@@ -9,7 +9,7 @@ import bookReducer from "./store/reducers/bookReducer";
 const initialState = {};
 const middleware = [thunk];
 
-const rootReducer = combineReducers({
+const allReducer = combineReducers({
   auth: authReducer,
   books: bookReducer,
 });
@@ -19,7 +19,7 @@ const persistConfig = {
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, allReducer);
 
 export const store = createStore(
   persistedReducer,
@@ -29,5 +29,13 @@ export const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )
 );
-
+// export const store = createStore(
+//   allReducer,
+//   initialState,
+//   compose(
+//     applyMiddleware(...middleware),
+//     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+//   )
+// );
 export const persistor = persistStore(store);
+// export default store

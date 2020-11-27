@@ -49,26 +49,63 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     />
 
+    <!-- Materialize-->
+    <!-- Compiled and minified CSS -->
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    /> -->
+
+    <!-- Compiled and minified JavaScript -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+
     <!-- Scrollbar Custom CSS -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"
     />
 
+    <!-- MDB -->
+    <!-- Font Awesome -->
+    <!-- <link
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      rel="stylesheet"
+    /> -->
+    <!-- Google Fonts -->
+    <!-- <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    /> -->
+    <!-- MDB -->
+    <!-- <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/2.2.1/mdb.min.css"
+      rel="stylesheet"
+    /> -->
+
     <title>React App</title>
     <style>
       body {
-        background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
-        background-size: cover;
+        background-image: li/near-gradient(to top, #dfe9f3 0%, white 100%);
+        /* background-size: cover; */
         /* height: 100%; */
-        height: 100vh;
+        /* height: 100vh; */
         /* background-size: contain;
         width: 100%;
         height: 100%; */
       }
-      #root {
-        position: relative;
-      }
+      /* #root {
+        height: 100vh;
+      } */
+      /* body::-webkit-scrollbar { */
+      /* width: 8px; width of the entire scrollbar */
+      /* } */
+      /* body::-webkit-scrollbar-track { */
+      /* background: rgba(255, 255, 255, 0.747); color of the tracking area */
+      /* } */
+      /* body::-webkit-scrollbar-thumb { */
+      /* background-color: rgba(0, 0, 0, 0.432); color of the scroll thumb */
+      /* border-radius: 20px; roundness of the scroll thumb */
+      /* } */
     </style>
   </head>
   <body>
@@ -112,7 +149,7 @@
           document.body.scrollTop > 50 ||
           document.documentElement.scrollTop > 50
         ) {
-          document.getElementById("fash-bottom").style.padding = "10px";
+          document.getElementById("fash-bottom").style.padding = "15px";
         } else {
           document.getElementById("fash-bottom").style.padding = "60px";
         }
@@ -122,5 +159,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+    <!-- MDB -->
+    <!-- <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/2.2.1/mdb.min.js"
+    ></script> -->
   </body>
 </html>

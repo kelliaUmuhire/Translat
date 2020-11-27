@@ -50,7 +50,6 @@ router.post(
 router.get(
   "/selfbooks",
   passport.authenticate("jwt", { session: false }),
-  passport.authenticate("jwt", { session: false }),
   BookController.getUserBooks
 );
 
@@ -98,5 +97,20 @@ router.get("/bookcontent/:bookId", BookController.bookContent);
 router.get("/getpage/:pageId", BookController.getPage);
 
 router.post("/updatechapter/:chapterId", BookController.updateChapter);
+
+router.get("/getone/:bookId", BookController.getOne);
+
+//Publishing
+router.post("/publishpage/:pageId", BookController.publishPage);
+router.post("/publishchapter/:chapterId", BookController.publishChapter);
+router.post("/publishbook/:bookId", BookController.publishBook);
+
+router.get(
+  "/tempget",
+  passport.authenticate("jwt", { session: false }),
+  BookController.temporarlyGet
+);
+
+router.get("/browserbooks", BookController.getBrowserBooks);
 
 module.exports = router;

@@ -1,12 +1,12 @@
 import * as actionTypes from "../actionTypes";
-import { isEmpty } from "lodash";
 
 const inititalState = {
   books: [],
   loading: false,
-  isAuthenticated: false,
-  user: {},
+  // user: {},
   editBook: {},
+  library: {},
+  dashBooks: [],
 };
 
 const reducer = (state = inititalState, action) => {
@@ -23,12 +23,6 @@ const reducer = (state = inititalState, action) => {
         loading: false,
         books: action.payload,
       };
-    case actionTypes.SET_CURRENT_USER:
-      return {
-        ...state,
-        isAuthenticated: !isEmpty(action.payload),
-        user: action.payload,
-      };
     case actionTypes.ADD_BOOK:
       return {
         ...state,
@@ -38,6 +32,9 @@ const reducer = (state = inititalState, action) => {
       return {
         ...state,
         books: state.books.filter((book) => book._id !== action.payload),
+        dashBooks: state.dashBooks.filter(
+          (book) => book.bookId !== action.payload
+        ),
       };
     case actionTypes.SET_EDIT_BOOK:
       return {
@@ -63,6 +60,28 @@ const reducer = (state = inititalState, action) => {
           ...state.editBook.book,
           chapters: [...state.editBook.chapters],
         },
+      };
+    case actionTypes.ADD_LIBRARY:
+      return {
+        ...state,
+        library: action.payload,
+      };
+    case actionTypes.ADD_BOOK_TO_LIBRARY:
+      return {
+        ...state,
+        library: {
+          ...state.library,
+          books: [...state.library.books, action.payload],
+        },
+      };
+    case actionTypes.SET_BOOKS:
+      return {
+        ...state,
+        dashBooks: action.payload,
+      };
+    case actionTypes.LOG_OUT:
+      return {
+        state: {},
       };
     default:
       return state;
