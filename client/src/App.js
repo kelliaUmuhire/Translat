@@ -39,6 +39,7 @@ function App() {
             <Route exact path="/searchresult" component={ResultPage} />
             <Route exact path="/profile/:handle" component={Profile} />
           </MDBContainer>
+
           {/* <MDBFooter>
             <Footer /> fixing issues
           </MDBFooter> */}
