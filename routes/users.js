@@ -38,6 +38,8 @@ app.post("/register", (req, res) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
       });
 
       bcrypt.genSalt(10, (err, salt) => {
@@ -76,7 +78,12 @@ app.post("/login", (req, res) => {
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (isMatch) {
         // User matched
-        const payload = { id: user.id, name: user.name }; // Jwt payload
+        const payload = {
+          id: user.id,
+          name: user.name,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        }; // Jwt payload
         // Sign Token
         jwt.sign(
           payload,
@@ -108,9 +115,18 @@ app.get(
       id: req.user.id,
       name: req.user.name,
       email: req.user.email,
+      firstName: req.user.firstName,
     });
   }
 );
+
+//search users
+app.get("/searchusers/:name", async (req, res) => {
+  const regex = new RegExp(req.params.name, "i");
+  User.find({ name: regex })
+    .then((users) => res.send(users))
+    .catch((err) => console.log(err));
+});
 
 //test post
 // app.post('/test',[

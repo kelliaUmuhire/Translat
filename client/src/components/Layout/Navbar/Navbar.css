@@ -12,7 +12,7 @@ nav {
   text-decoration: none;
 }
 
-/**#6c5b7b, #1f2d41**/
+/**#6c5b7b, #f1f2d41**/
 .navbar {
   display: flex;
   flex-wrap: wrap;
@@ -77,6 +77,7 @@ nav {
   background-color: transparent;
   border: 0.125rem solid transparent;
   border-radius: 0.5rem;
+  color: #30475e !important;
 }
 
 .navbar-toggler:hover,
@@ -95,10 +96,11 @@ nav {
 }
 
 a {
-  color: #ffc7c7;
+  color: #30475e;
 }
+
 a:hover {
-  color: #88304e;
+  color: #466686;
 }
 
 .option {
@@ -128,6 +130,14 @@ a:hover {
 
 .drop {
   position: relative;
+}
+
+.navbar .search-form {
+  border: hidden !important;
+}
+
+.navbar .fa-search:hover {
+  cursor: pointer;
 }
 
 /* a {

@@ -23,6 +23,7 @@ router.post(
         location: "",
         hobbies: [],
         handle: req.user.name,
+        names: req.user.firstName + " " + req.user.lastName,
       });
       newProfile
         .save()
@@ -37,6 +38,17 @@ router.get("/:handle", (req, res) => {
   Profile.findOne({ handle: req.params.handle })
     .then((profile) => {
       res.send(profile);
+    })
+    .catch((err) => console.log(err));
+});
+
+//search profiles
+router.get("/searchprofile/:name", (req, res) => {
+  const regex = new RegExp(req.params.name, "i");
+  Profile.find({ handle: regex })
+    .then((profiles) => {
+      console.log(profiles);
+      res.send(profiles);
     })
     .catch((err) => console.log(err));
 });

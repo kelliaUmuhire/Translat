@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { getLibrary } from "../../store/actions/booksAction";
 // import authReducer from "../../store/reducers/authReducer";
 
+import "./Library.css";
+
 class Library extends Component {
   state = {
     userLibrary: null,
@@ -12,22 +14,26 @@ class Library extends Component {
     tempBooks: [],
   };
   componentDidMount() {
-    this.props.getlibrary(this.props.user.id);
-    // console.log(this.props.library);
+    let par = this.props.match.params.username;
+    this.props.getlibrary(par);
+    console.log(this.props.library);
     let temp = [];
-    if (this.props.library)
+    if (this.props.library.books) {
       this.props.library.books.map((book) => {
         axios
-          .get(`api/books/getone/${book}`)
+          .get(`/api/books/getone/${book}`)
           .then((res) => {
+            console.log(res.data);
             temp.push(res.data);
           })
           .catch((err) => console.log(err));
         return 0;
       });
+    }
     // let index = temp.findIndex((x) => Object.keys(x).length === 0);
     // let temp2 = temp.filter((x) => indexOf(x) !== index);
     this.setState({ tempBooks: temp });
+    this.setState({ userLibrary: this.props.library });
   }
 
   getDetails = (bookId) => {
@@ -71,17 +77,6 @@ class Library extends Component {
     //   );
     // });
     let showBooks = null;
-    // if (this.props.library !== null) {
-    // // console.log(this.props.library.books);
-    // showBooks = this.props.library.books.map((book) => {
-    //   let temp = null;
-    //   axios
-    //     .get(`api/books/getone/${book}`)
-    //     .then((res) => (temp = <div>{book}</div>))
-    //     .catch((err) => console.log(err));
-    //   return temp;
-    // });
-
     //need loader///
     showBooks = this.state.tempBooks.map((book) => (
       <Book
@@ -93,15 +88,15 @@ class Library extends Component {
       />
     ));
 
-    console.log(showBooks);
+    // console.log(showBooks);
     // console.log(this.state.tempBooks);
     // }
 
     return (
-      <div className="container">
+      <div className="container Library">
         {/* <div className="row">{showBooks}</div> */}
         {/* <i className="fas fa-spinner fa-pulse"></i> */}
-        Hold on
+        This is your library
         {/* <div className="row">
           {this.state.userLibrary !== null
             ? this.state.userLibrary.books.map((book) => {
@@ -123,6 +118,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getlibrary: (userId) => dispatch(getLibrary(userId)),
+  getlibrary: (username) => dispatch(getLibrary(username)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Library);

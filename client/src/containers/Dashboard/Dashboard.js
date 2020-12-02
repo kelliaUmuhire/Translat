@@ -3,42 +3,31 @@ import axios from "axios";
 import _ from "lodash";
 import { connect } from "react-redux";
 import NotificationSystem from "react-notification-system";
+import cx from "classnames";
 
 import "./Dashboard.css";
-import { get_books, removeBook } from "../../store/actions/booksAction";
+import {
+  get_books,
+  removeBook,
+  updateBook,
+  updateBooks,
+} from "../../store/actions/booksAction";
 
 class Dashboard extends Component {
   state = {
     books: [],
     errors: null,
     tempData: {},
+    edit: false,
+    holder: "",
+    translate: false,
   };
 
   notificationSystem = React.createRef();
 
   componentDidMount() {
-    // axios
-    //   .get("api/books/tempget")
-    //   .then((res) => this.setState({ books: res.data }))
-    //   .catch((err) => this.setState({ errors: err }));
-
     this.props.getbooks();
     // console.log(this.props.books);
-  }
-
-  async contentDisplay(bookId, obj) {
-    // const prom = axios
-    //   .get(`api/books/bookcontent/${bookId}`)
-    //   .then((res) => res.data);
-    // await prom;
-    const prom = axios.get(`api/books/bookcontent/${bookId}`).then((res) => {
-      obj.books = _.cloneDeep(res.data);
-    });
-    await prom;
-    return 0;
-    // console.log(data);
-    // let display = <div>{data.book.bookName}</div>;
-    // return data;
   }
 
   showNotification = (message, level) => {
@@ -50,92 +39,81 @@ class Dashboard extends Component {
     });
   };
 
-  helperFunction = (data) => {
-    // console.log(data);
-    // let display = <div>{data.book.bookName}</div>;
-    // this.setState({ tempData: data });
-    // return display;
-    // const result = await this.contentDisplay(bookId);
-    // return result;
-    console.log(data);
-    return <div>ooooo</div>;
-  };
-
   deleteBook = (bookId) => {
     axios
       .post(`api/books/deletebook/${bookId}`)
-      .then((res) => console.log("Book deleted"));
-  };
-
-  deleteChapter = (chapterId) => {
-    axios
-      .post(`api/books/deletechapter/${chapterId}`)
       .then((res) => {
-        console.log("Temp reload");
-        this.showNotification("Chapter removed!", "warning");
+        //fix issuses
+        this.showNotification("Book deleted", "warning");
       })
       .catch((err) => console.log(err));
   };
-
-  publishChapter = (chapterId) => {
-    axios
-      .post(`api/books/publishchapter/${chapterId}`)
-      .then((res) => {
-        console.log("Reload to see changes(xorry)");
-        this.showNotification("Chapter published!", "success");
-      })
-      .catch((err) => console.log(err));
-  };
-
   publishBook = (bookId) => {
     axios
       .post(`api/books/publishbook/${bookId}`)
       .then((res) => {
+        //fix issuses
         console.log("Temporarly reload needed");
-        this.showNotification("Book published!", "success");
+        this.props.update(bookId, "published", true);
+        this.showNotification("Book published!", "info");
       })
       .catch((err) => console.log(err));
   };
 
+  listenForDoubleClick = (e) => {
+    console.log(e.target.getAttribute("name"));
+    console.log("Double clicked");
+    this.setState({ edit: !this.state.edit });
+  };
+
+  saveChanges = (e) => {
+    // console.log(e.target);
+    this.setState({ holder: e.target.innerText });
+  };
+
+  onBlur = (bookId, e) => {
+    //update book
+    // console.log(e.target.getAttribute("name"));
+    // console.log(bookId);
+    console.log(this.state.holder);
+    if (this.state.holder !== "") {
+      axios
+        .post("/api/books/updatename", {
+          bookId: bookId,
+          newvalue: this.state.holder,
+          field: e.target.getAttribute("name"),
+        })
+        .then((res) => console.log(res.data))
+        .catch((err) => console.log(err));
+    }
+    this.setState({ holder: "", edit: false });
+  };
+
+  checkboxChange = (bookId, e) => {
+    axios
+      .post("/api/books/updatename", {
+        bookId: bookId,
+        newvalue: e.target.checked,
+        field: "translate",
+      })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+
   render() {
-    // let display = this.state.books.map(book => (
-    // <div>{this.contentDisplay(_.pick(book, ["_id", "title"]))}</div>
-    // ))
-    // this.state.books.map((book) => {
-    //   let temp = null;
-    //   // temp = this.contentDisplay(book._id);
-    //   // this.contentDisplay(book._id);
-    //   // console.log(temp);
-    //   // console.log(this.state.tempData);
-
-    //   return (async () => {
-    //     let temp1 = await this.helperFunction(book._id);
-    //     console.log(temp1.data);
-    //   })();
-    // });
-    // let display = this.state.books.map((book) => {
-    //   let temp = {
-    //     books: {},
-    //     name: "temporarly",
-    //   };
-    //   this.contentDisplay(book._id, temp);
-    //   // this.helperFunction(temp);
-    //   console.log(temp);
-    //   return this.helperFunction(temp);
-    // });
-
+    // console.log(this.props.books);
     let display = this.props.books
       ? this.props.books.map((book) => (
           <div key={book.bookId}>
             <button
-              className="btn col-8 col-md-12"
+              className="btn col-6 col-md-12"
               type="button"
               data-toggle="collapse"
-              data-target={`#book${book.bookId}`}
+              data-target={`#book${book._id}`}
               aria-expanded="false"
               aria-controls="chapters"
             >
-              <span className="name">{book.bookName}</span>
+              <span className="name">{book.title}</span>
               <span
                 className="delete-button"
                 onClick={() => this.deleteBook(book.bookId)}
@@ -145,34 +123,94 @@ class Dashboard extends Component {
               {!book.published ? (
                 <span
                   className="publish-button"
-                  onClick={() => this.publishBook(book.bookId)}
+                  onClick={() => this.publishBook(book._id)}
                   title="Publish Book"
                 >
                   <i className="float-right mr-5 fas fa-upload"></i>
                 </span>
               ) : null}
             </button>
-            <div id={`book${book.bookId}`}>
-              {book.chapters.map((chapter) => (
-                <div key={chapter._id} className="mb-2 chap">
-                  <span className="name">{chapter.name}</span>
+            <div id={`book${book._id}`} className="collapse">
+              <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Author
                   <span
-                    className="delete-button"
-                    onClick={() => this.deleteChapter(chapter._id)}
+                    onDoubleClick={this.listenForDoubleClick}
+                    contentEditable={this.state.edit}
+                    value="author"
+                    name="author"
+                    onBlur={(e) => this.onBlur(book._id, e)}
+                    onInput={this.saveChanges}
+                    suppressContentEditableWarning={true}
                   >
-                    <i className="float-right mr-2 far fa-trash-alt"></i>
+                    {book.author}
                   </span>
-                  {!chapter.published ? (
-                    <span
-                      className="publish-button"
-                      onClick={() => this.publishChapter(chapter._id)}
-                      title="Publish chapter"
-                    >
-                      <i className="float-right mr-5 fas fa-upload"></i>
-                    </span>
-                  ) : null}
-                </div>
-              ))}
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Book name
+                  <span
+                    onDoubleClick={this.listenForDoubleClick}
+                    contentEditable={this.state.edit}
+                    value="title"
+                    name="title"
+                    onBlur={(e) => this.onBlur(book._id, e)}
+                    onInput={this.saveChanges}
+                    suppressContentEditableWarning={true}
+                  >
+                    {book.title}
+                  </span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Book language
+                  <span
+                    onDoubleClick={this.listenForDoubleClick}
+                    contentEditable={this.state.edit}
+                    value="bookLanguage"
+                    name="bookLanguage"
+                    onBlur={(e) => this.onBlur(book._id, e)}
+                    onInput={this.saveChanges}
+                    suppressContentEditableWarning={true}
+                  >
+                    {book.bookLanguage}
+                  </span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  On translation list
+                  <span class="">
+                    <input
+                      type="checkbox"
+                      name="translate"
+                      value="translate"
+                      defaultChecked={book.translate}
+                      onChange={(e) => this.checkboxChange(book._id, e)}
+                    />
+                  </span>
+                </li>
+                <li
+                  className={cx(
+                    "list-group-item",
+                    "d-flex",
+                    "justify-content-between",
+                    "align-items-center",
+                    {
+                      grey_bg: !book.translate,
+                    }
+                  )}
+                >
+                  Language for translation
+                  <span
+                    onDoubleClick={this.listenForDoubleClick}
+                    contentEditable={this.state.edit}
+                    value="translateLang"
+                    name="translateLang"
+                    onBlur={(e) => this.onBlur(book._id, e)}
+                    onInput={this.saveChanges}
+                    suppressContentEditableWarning={true}
+                  >
+                    {book.translate ? book.translateLang : "No language"}
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
         ))
@@ -181,7 +219,7 @@ class Dashboard extends Component {
       <div className="container Dashboard">
         <NotificationSystem ref={this.notificationSystem} />
         <h2>These are your stories for easy modification</h2>
-        <div className="books border">{display}</div>
+        <div className="books">{display}</div>
       </div>
     );
   }
@@ -194,5 +232,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   deletebook: (bookId) => dispatch(removeBook(bookId)),
   getbooks: () => dispatch(get_books()),
+  update: (bookId, field, value) => dispatch(updateBook(bookId, field, value)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

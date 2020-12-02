@@ -8,7 +8,7 @@ import App from "./App";
 import axios from "axios";
 import reportWebVitals from "./reportWebVitals";
 import { MDBContainer } from "mdbreact";
-// import Footer from "./components/Layout/Footer/Footer";
+import Footer from "./components/Layout/Footer/Footer";
 
 axios.defaults.headers.common["Authorization"] = localStorage.getItem(
   "jwtToken"
@@ -16,10 +16,10 @@ axios.defaults.headers.common["Authorization"] = localStorage.getItem(
 // axios.defaults.baseURL = "http://localhost:5000/";
 ReactDOM.render(
   <React.StrictMode>
-    <MDBContainer>
-      <App />
-    </MDBContainer>
-    {/* <Footer /> fixing issues */}
+    {/* <MDBContainer> */}
+    <App />
+    {/* </MDBContainer> */}
+    {/* <Footer /> */}
   </React.StrictMode>,
   document.getElementById("root")
 );

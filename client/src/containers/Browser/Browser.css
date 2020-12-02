@@ -1,0 +1,39 @@
+.Browser .filter-btn {
+  background-color: #f05454 !important;
+  padding: 10px !important;
+}
+
+.Browser {
+  margin-bottom: 1em;
+}
+
+.Browser #filter {
+  /* background-color: #222831;
+  color: white; */
+  justify-content: space-around;
+}
+.Browser #filter .form-check {
+  /* background-color: #222831;
+  color: white; */
+  padding-top: 1em;
+}
+
+.Browser .lang {
+  padding: 0em 3em 1em 3em;
+  align-items: center;
+}
+
+.btn {
+  text-transform: none !important;
+}
+
+.Browser h3 {
+  font-size: 15px;
+  align-self: center;
+}
+
+.Browser .active {
+  background-color: #222831;
+  color: #e8e8e8;
+  box-shadow: none !important;
+}

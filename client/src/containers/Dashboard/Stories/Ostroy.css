@@ -1,10 +1,12 @@
 .stories {
   margin-top: 6rem;
+  margin-bottom: 2rem;
+  /* position: relative; */
 }
 
-.row {
+/* .row {
   margin-top: 0 !important;
-}
+} */
 
 .head {
   color: #522546;

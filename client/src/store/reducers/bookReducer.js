@@ -4,9 +4,16 @@ const inititalState = {
   books: [],
   loading: false,
   // user: {},
-  editBook: {},
   library: {},
   dashBooks: [],
+  // book: {
+  //   chapters: [
+  //     {
+  //       name: "chapter one",
+  //       pages: [{ content: "skjsdjkjjdkdsjkd" }],
+  //     },
+  //   ],
+  // },
 };
 
 const reducer = (state = inititalState, action) => {
@@ -36,30 +43,14 @@ const reducer = (state = inititalState, action) => {
           (book) => book.bookId !== action.payload
         ),
       };
-    case actionTypes.SET_EDIT_BOOK:
+    case actionTypes.UPDATE_BOOK:
       return {
         ...state,
-        editBook: action.payload,
-      };
-    case actionTypes.ADD_CHAPTER:
-      // Object.assign({}, state.editBook, {
-      //   chapters: [...state.editBook.chapters, action.payload],
-      // })
-      return {
-        ...state,
-        editBook: {
-          ...state.editBook.book,
-          chapters: [...state.editBook.book, action.payload],
-        },
-      };
-    case actionTypes.ADD_PAGE:
-      // let place = [...state.editBook.chapters[ident].pages];
-      return {
-        ...state,
-        editBook: {
-          ...state.editBook.book,
-          chapters: [...state.editBook.chapters],
-        },
+        dashBooks: state.dashBooks.map((book) =>
+          book._id === action.payload.bookId
+            ? { ...book, [action.payload.field]: action.payload.value }
+            : book
+        ),
       };
     case actionTypes.ADD_LIBRARY:
       return {
@@ -97,5 +88,9 @@ const reducer = (state = inititalState, action) => {
 //     // })
 
 // }
+
+// {if(book._id===action.payload.bookId){
+//   return {...book, [action.payload.field]:action.payload.value}
+// }}
 
 export default reducer;

@@ -1,11 +1,11 @@
 .ProfileHeader .main-section {
-  margin-top: 2rem;
+  margin-top: 6rem;
   /* border: 1px solid #311d3f; */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   background-color: #fff;
 }
 .ProfileHeader .profile-header {
-  background-color: #e43c55;
+  background-color: #f05454;
   height: 150px;
 }
 .ProfileHeader .user-detail {
@@ -29,11 +29,11 @@
   padding: 0px 5px;
 }
 .ProfileHeader .btn {
-  background-color: #522546;
-  color: #88304e;
+  background-color: #30475e;
+  color: #e8e8e8;
 }
 .ProfileHeader .btn:hover {
-  color: #e43c55;
+  color: #fcf8f8;
 }
 .ProfileHeader .social {
   /* position: absolute;

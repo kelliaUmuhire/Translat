@@ -22,15 +22,23 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  uploaded: {
-    type: Boolean,
-    required: true,
-  },
   date: {
     type: Date,
     default: Date.now(),
   },
   published: {
+    type: Boolean,
+    default: false,
+  },
+  bookLanguage: {
+    type: String,
+    default: "Kinyarwanda",
+  },
+  translateLang: {
+    type: String,
+    default: "Swahili",
+  },
+  translate: {
     type: Boolean,
     default: false,
   },

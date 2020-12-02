@@ -10,7 +10,7 @@ class ProfileHeader extends Component {
     library: 0,
     tempBooks: [],
   };
-  componentDidMount() {
+  async componentDidMount() {
     // console.log(this.props.library);
     // console.log("Mounted");
     // let temp = [];
@@ -50,27 +50,51 @@ class ProfileHeader extends Component {
 
     let temp = [];
     if (this.props.library.books) {
-      this.props.library.books.map((book) => {
+      await this.props.library.books.map((book) => {
         axios({
           method: "get",
           url: `/api/books/getone/${book}`,
         })
           .then((res) => {
-            console.log(res.data);
-            temp.push(res.data);
-            this.setState({ tempBooks: temp });
+            if (res.data !== "not") {
+              temp.push(res.data);
+              this.setState({ tempBooks: temp });
+            } else {
+              console.log("Null");
+            }
           })
           .catch((err) => console.log(err));
         return 0;
       });
-      return temp;
     }
+    console.log(temp);
+    return 0;
 
     // this.setState({ tempBooks: temp });
   }
 
-  componentDidUpdate() {
-    console.log(this.state.tempBooks);
+  async componentDidUpdate() {
+    let temp = [];
+    if (this.state.tempBooks.length < 1) {
+      if (this.props.library.books) {
+        await this.props.library.books.map((book) => {
+          axios({
+            method: "get",
+            url: `/api/books/getone/${book}`,
+          })
+            .then((res) => {
+              if (res.data !== "not") {
+                temp.push(res.data);
+                this.setState({ tempBooks: temp });
+              } else {
+                console.log("Null");
+              }
+            })
+            .catch((err) => console.log(err));
+          return 0;
+        });
+      }
+    }
   }
 
   render() {
@@ -146,7 +170,7 @@ class ProfileHeader extends Component {
                     ))
                   ) : (
                     <div>
-                      <i class="fas fa-spinner fa-spin"></i>
+                      <i className="fas fa-spinner fa-spin"></i>
                     </div>
                   )}
                 </div>

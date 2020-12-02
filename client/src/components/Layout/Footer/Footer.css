@@ -1,7 +1,15 @@
-footer {
+.Footer {
   /* position: absolute; */
   /* position: relative; */
   /* bottom: 0;
   margin-bottom: 0; */
-  margin-bottom: -2rem;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  margin-top: 2em;
+  /*margi */
 }
+
+/* .Footer .links {
+  align-content: center;
+} */

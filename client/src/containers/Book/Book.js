@@ -2,16 +2,12 @@ import React, { Component } from "react";
 import axios from "axios";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { confirmAlert } from "react-confirm-alert"; // Import
+// import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import _ from "lodash";
 
 import "./Book.css";
-import {
-  addBookToLibrary,
-  removeBook,
-  setEditBook,
-} from "../../store/actions/booksAction";
+import { addBookToLibrary, removeBook } from "../../store/actions/booksAction";
 
 // import { data } from 'node-persist';
 
@@ -31,43 +27,31 @@ class Book extends Component {
   getUrl = () => {
     let fullDetails = {};
     let bookUrl = this.getFileName(this.props.book_url);
-    if (bookUrl !== "db") {
-      fullDetails.pathname = "/readbook";
-      fullDetails.state = {
-        book: "http://localhost:5000/book/" + bookUrl,
-      };
-      return fullDetails;
-    } else {
-      axios
-        .get(`api/books/getbook/${this.props.bookId}`)
-        .then((res) => {
-          fullDetails.pathname = "/readcontent";
-          fullDetails.state = {
-            data: res.data,
-          };
-        })
-        .catch((err) => console.log(err));
-      return fullDetails;
-    }
+
+    fullDetails.pathname = "/readbook";
+    fullDetails.state = {
+      book: "http://localhost:5000/book/" + bookUrl,
+    };
+    return fullDetails;
   };
 
   deleteBook() {
     //add confirmation
     // if(window.confirm("You sure?!")){
-    confirmAlert({
-      title: "Confirm to submit",
-      message: "Are you sure to do this.",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: () => alert("Click Yes"),
-        },
-        {
-          label: "No",
-          onClick: () => alert("Click No"),
-        },
-      ],
-    });
+    // confirmAlert({
+    //   title: "Confirm to submit",
+    //   message: "Are you sure to do this.",
+    //   buttons: [
+    //     {
+    //       label: "Yes",
+    //       onClick: () => alert("Click Yes"),
+    //     },
+    //     {
+    //       label: "No",
+    //       onClick: () => alert("Click No"),
+    //     },
+    //   ],
+    // });
 
     axios.post(`api/books/deletebook/${this.props.bookId}`).then((res) => {
       //  console.log("DOneee!!")
@@ -76,49 +60,21 @@ class Book extends Component {
     // }
   }
 
-  editBook = () => {
-    //bookId, chapters, pages
-    // {
-    //   pathname: "/writebook",
-    //   state: { data: res.data },
-    // }
-    axios
-      .get(`api/books/getall/${this.props.bookId}`)
-      .then((res) => {
-        this.props.edit(res.data);
-        this.props.history.push("/writebook");
-      })
-      .catch((err) => console.log(err));
-  };
-
-  readBook = () => {
-    axios
-      .get(`api/books/bookcontent/${this.props.bookId}`)
-      .then((res) => {
-        // console.log(res.data);
-        let temp = _.cloneDeep(res.data);
-        let temp2 = temp.chapters.filter((chap) => chap.published);
-        temp.chapters = _.cloneDeep(temp2);
-        // temp.chapters = Object.assign({}, temp.chapters, {
-        //   chapters: temp.chapters.filter((chap) => chap.published),
-        // })
-        setTimeout(() => {
-          this.props.history.push(
-            {
-              pathname: "/readcontent",
-              state: { data: { ...temp } },
-            },
-            2000
-          );
-        });
-      })
-      .catch((err) => console.log(err));
-  };
-
   addToLibrary = () => {
     axios
-      .post(`api/library/${this.props.bookId}`)
-      .then((res) => this.props.addtoLibrary(this.props.bookId))
+      .post(
+        `api/library/${this.props.bookId}`,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("jwtToken"),
+          },
+        }
+      )
+      .then((res) => {
+        this.props.addtoLibrary(this.props.bookId);
+        this.props.notify("Book added to your library", "success");
+      })
       .catch((err) => console.log(err));
   };
   render() {
@@ -128,31 +84,14 @@ class Book extends Component {
 
     // }
     let addtolib = null;
-    let menu =
-      this.getFileName(this.props.book_url) === "db" && !this.props.readonly ? (
-        <div className="card-body">
-          <div
-            className="card-text btnicon pr-2"
-            onClick={this.editBook}
-            data-toggle="popover"
-            data-content="Edit"
-            data-placement="top"
-            data-trigger="hover"
-          >
-            <i className="fas fa-edit"></i>
-          </div>
+    let menu = (
+      <div>
+        <Link to={this.getUrl()}>
+          <i className="fas fa-book-open"></i>
+        </Link>
+        {this.props.readonly ? null : (
           <div
             className="card-text btnicon pr-1 pl-1"
-            onClick={this.readBook}
-            data-toggle="popover"
-            data-content="Read book"
-            data-placement="top"
-            data-trigger="hover"
-          >
-            <i className="fas fa-book-open"></i>
-          </div>
-          <div
-            className="card-text btnicon pt-1"
             onClick={this.deleteBook}
             data-toggle="popover"
             data-content="Delete book"
@@ -161,33 +100,10 @@ class Book extends Component {
           >
             <i className="far fa-trash-alt"></i>
           </div>
-        </div>
-      ) : (
-        <div
-          className="card-text btnicon pr-1 pl-1"
-          onClick={this.readBook}
-          data-toggle="popover"
-          data-content="Read book"
-          data-placement="top"
-          data-trigger="hover"
-        >
-          <i className="fas fa-book-open"></i>
-        </div>
-      );
-    if (this.props.book_url === "db" && this.props.readonly) {
-      menu = (
-        <div
-          className="card-text btnicon pr-1 pl-1"
-          onClick={this.readBook}
-          data-toggle="popover"
-          data-content="Read book"
-          data-placement="top"
-          data-trigger="hover"
-        >
-          <i className="fas fa-book-open"></i>
-        </div>
-      );
-    }
+        )}
+      </div>
+    );
+
     if (this.props.readonly && this.props.library) {
       let index = this.props.library.books
         ? this.props.library.books.indexOf(this.props.bookId)
@@ -232,7 +148,6 @@ class Book extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   remove: (bookId) => dispatch(removeBook(bookId)),
-  edit: (book) => dispatch(setEditBook(book)),
   addtoLibrary: (bookId) => dispatch(addBookToLibrary(bookId)),
 });
 

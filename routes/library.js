@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
 //@route  GET api/library/:userId
 //@desc   Get user library
 //@access Public temporary
-router.get("/:userId", (req, res) => {
+router.get("/:userId", async (req, res) => {
   Library.findOne({ userId: req.params.userId })
     .then((lib) => {
       res.send(lib);
@@ -24,8 +24,8 @@ router.get("/:userId", (req, res) => {
 //@route  GET api/library/:username
 //@desc   Get user library //first searching the name then id
 //@access Public temporary
-router.get("/getbyname/:handle", (req, res) => {
-  User.findOne({ name: req.params.handle })
+router.get("/getbyname/:name", async (req, res) => {
+  User.findOne({ name: req.params.name })
     .then((user) => {
       Library.findOne({ userId: user._id })
         .then((lib) => {

@@ -18,6 +18,17 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isTranslator: {
+    type: Boolean,
+    default: false,
+  },
+  resume: {
+    type: String,
+  },
+  names: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("profiles", ProfileSchema);

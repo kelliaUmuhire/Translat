@@ -6,6 +6,7 @@ import "./css/Login.css";
 import { createProfile, logInUser } from "../../store/actions/authAction";
 
 import InputGroup from "../../components/UI/InputGroup/InputGroup";
+import { createLibrary } from "../../store/actions/booksAction";
 
 class Login extends Component {
   constructor(props) {
@@ -22,7 +23,10 @@ class Login extends Component {
     // Typical usage (don't forget to compare props):
     if (this.props.auth.isAuthenticated) {
       if (this.props.location.state) {
-        if (this.props.location.state.new) this.props.addprofile();
+        if (this.props.location.state.new) {
+          this.props.createlibrary();
+          this.props.addprofile();
+        }
       }
       this.props.history.push("/dashboard");
     }
@@ -121,6 +125,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   userLogin: (userData, history) => dispatch(logInUser(userData, history)),
   addprofile: () => dispatch(createProfile()),
+  createlibrary: () => dispatch(createLibrary()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

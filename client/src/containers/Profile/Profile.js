@@ -7,17 +7,34 @@ class Profile extends Component {
   state = {
     profile: {},
     library: {},
+    tempBooks: [],
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    let templib = [];
+    let temp = [];
     //get library
-    axios
+    await axios
       .get(`/api/library/getbyname/${this.props.match.params.handle}`)
       .then((res) => {
+        templib = res.data;
         this.setState({ library: res.data });
       })
       .catch((err) => console.log(err));
 
+    //get books
+    // templib.books.map((book) => {
+    //   axios({
+    //     method: "get",
+    //     url: `/api/books/getone/${book}`,
+    //   })
+    //     .then((res) => {
+    //       temp.push(res.data);
+    //       this.setState({ tempBooks: temp });
+    //     })
+    //     .catch((err) => console.log(err));
+    //   return 0;
+    // });
     //get profile
     axios
       .get(`/api/profile/${this.props.match.params.handle}`)
@@ -35,6 +52,7 @@ class Profile extends Component {
           location={this.state.profile.location}
           picture={this.state.profile.image}
           library={this.state.library}
+          tempBooks={this.state.tempBooks}
         />
       </div>
     );
