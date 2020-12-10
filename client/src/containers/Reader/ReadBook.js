@@ -3,6 +3,9 @@ import { Page } from "react-pdf";
 // import { Page, View } from "@react-pdf/renderer";
 import { Document } from "react-pdf/dist/esm/entry.webpack";
 
+import book from "./Just Mercy.pdf";
+
+import "./css/ReadBook.css";
 const ReadBook = (props) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -24,23 +27,25 @@ const ReadBook = (props) => {
     changePage(1);
   }
 
-  const loc = props.location.state.book;
+  // const loc = props.location.state.book;
+  const loc = book;
   console.log(loc);
   return (
-    <div style={{ border: "2rem", marginLeft: "10rem", width: "90%" }}>
+    <div style={{ border: "2rem" }} className="ReadBook">
       <div
         className="main"
+        id="main"
         style={{
-          marginLeft: "2rem",
+          marginLeft: "21rem",
           // width: "67%",
           // paddingLeft: "5rem",
           // paddingRight: "1px",
           marginTop: "5rem",
-          width: "80%",
+          // width: "80%",
           // paddingTop: "5rem",
           // paddingBottom: "2rem",
         }}
-        className="shadow bg-white rounded"
+        className="rounded"
       >
         <Document file={loc} onLoadSuccess={onDocumentLoadSuccess}>
           <Page pageNumber={pageNumber}>
@@ -50,17 +55,19 @@ const ReadBook = (props) => {
           </Page>
         </Document>
         <div
-          className="text-center"
+          // className="text-center"
           disabled={pageNumber >= numPages}
-          style={{ marginRight: "1px", zIndex: "1999" }}
+          style={{ marginLeft: "15rem" }}
         >
           <p>
             Page {pageNumber || (numPages ? 1 : "--")} of {numPages || "--"}
           </p>
-          <button type="button" onClick={previousPage} className="btn">
+        </div>
+        <div className="move">
+          <button type="button" onClick={previousPage} className="btn previous">
             <i className="fa fa-arrow-left" aria-hidden="true"></i>
           </button>
-          <button type="button" onClick={nextPage} className="btn">
+          <button type="button" onClick={nextPage} className="btn next">
             <i className="fa fa-arrow-right" aria-hidden="true"></i>
           </button>
         </div>

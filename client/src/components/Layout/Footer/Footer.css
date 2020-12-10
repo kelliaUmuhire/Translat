@@ -1,15 +1,28 @@
-.Footer {
-  /* position: absolute; */
-  /* position: relative; */
-  /* bottom: 0;
-  margin-bottom: 0; */
+/* .Footer {
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  margin-top: 2em;
-  /*margi */
-}
+  /* position: relative; */
+/* bottom: 0; */
+/* width: 100%; */
+/*margin-bottom: 0; */
+/* position: absolute; */
+/* bottom: 0; */
+/* width: 100%; */
+/* margin-top: 2em; */
+/*margi */
+/* }  */
 
-/* .Footer .links {
-  align-content: center;
+/* .Footer {
+  position: absolute;
+  width: 100%;
+  background-color: rgb(20, 17, 43);
+  color: white;
+  text-align: center;
+  bottom: 0;
+} */
+/* .words {
+  position: relative;
+  min-height: 669px;
+}
+.content {
+  padding-bottom: 2.5rem;
 } */

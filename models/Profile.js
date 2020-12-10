@@ -29,6 +29,28 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  phoneNumber: {
+    type: String,
+    default: "",
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  social: {
+    youtube: {
+      type: String,
+    },
+    twitter: {
+      type: String,
+    },
+    facebook: {
+      type: String,
+    },
+    instagram: {
+      type: String,
+    },
+  },
 });
 
 module.exports = mongoose.model("profiles", ProfileSchema);

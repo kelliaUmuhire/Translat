@@ -4,6 +4,14 @@ import axios from "axios";
 import setAuthToken from "../../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
+//set current profile
+export const setProfile = (payload) => {
+  return {
+    type: actionTypes.SET_PROFILE,
+    payload: payload,
+  };
+};
+
 //user log in
 export const logInUser = (userData) => (dispatch) => {
   axios
@@ -17,8 +25,20 @@ export const logInUser = (userData) => (dispatch) => {
       setAuthToken(token);
       //decode token to get user data
       const decoded = jwt_decode(token);
+
+      //setting the profile
+      axios
+        .get("api/profile/current")
+        .then((res) => {
+          dispatch(setCurrentUser(decoded));
+          dispatch(setProfile(res.data));
+        })
+        .catch((err) => console.log(err));
+
       // isAuthenticated = true
-      dispatch(setCurrentUser(decoded));
+
+      //set current profile
+
       // console.log(decoded);
       // .catch(err => (Object.keys(err)).length !== 0 ? this.setState({errors : err.response.data}) : this.setState({errors:{}}))
     })
@@ -61,6 +81,21 @@ export const createProfile = () => (dispatch) => {
     .then((res) => console.log(res.data))
     .catch((err) => console.log(err));
 };
+
+//edit profile
+export const editProfile = (newProfile) => (dispatch) => {
+  console.log(newProfile);
+  axios
+    .post("/api/profile/edit", newProfile)
+    .then((res) =>
+      dispatch({
+        type: actionTypes.SET_PROFILE,
+        payload: res.data,
+      })
+    )
+    .catch((err) => console.log(err));
+};
+
 //logout
 
 export const removeUser = () => {

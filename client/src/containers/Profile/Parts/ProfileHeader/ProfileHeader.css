@@ -1,0 +1,85 @@
+.ProfileHeader {
+  text-align: center;
+}
+.ProfileHeader .main-section {
+  margin-top: 6rem;
+  /* border: 1px solid #311d3f; */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: #fff;
+}
+.ProfileHeader .profile-header {
+  /* background-color: #333456; */
+  background-image: url("https://4.bp.blogspot.com/-9m3WuO2nlxc/WGfTx36FtOI/AAAAAAAANj4/-wtnvqdU5DIvsGnul_bSawHVKoYOoqkkwCLcB/s1600/Fantasy%2BWallpapers%2B4.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 200px;
+}
+.ProfileHeader .user-detail {
+  margin: -50px 0px 30px 0px;
+  margin-top: -3rem !important;
+}
+.ProfileHeader .user-detail .img-thumbnail {
+  height: 100px;
+  width: 100px;
+}
+.ProfileHeader .user-detail h5 {
+  margin: 15px 0px 5px 0px;
+}
+.ProfileHeader .user-social-detail {
+  padding: 15px 0px;
+  background-color: #311d3f;
+}
+.ProfileHeader .user-social-detail a i {
+  color: #fff;
+  font-size: 23px;
+  padding: 0px 5px;
+}
+.ProfileHeader .btn {
+  background-color: #30475e;
+  color: #e8e8e8;
+}
+.ProfileHeader .btn:hover {
+  color: #fcf8f8;
+}
+.ProfileHeader .social {
+  /* position: absolute;
+    bottom: 0; */
+  float: right;
+  /* position: relative; */
+  /* padding-top: 8rem !important; */
+  /* margin-top: 9rem; */
+}
+.ProfileHeader .social a {
+  padding-left: 15px;
+  color: #222831 !important;
+  /* margin-top: 7.5em; */
+  /* z-index: 1999; */
+}
+
+/* .social i {
+    margin-top: 7.5rem;
+  } */
+
+.ProfileHeader .social a:hover {
+  color: #e4004c !important;
+}
+
+.ProfileHeader strong {
+  font-weight: 900;
+}
+
+.ProfileHeader .bookholder img {
+  height: 12rem;
+}
+
+.ProfileHeader .edit {
+  position: absolute;
+  top: 4.8%;
+  right: 2%;
+  color: #30475e;
+}
+
+.ProfileHeader .edit:hover {
+  color: #151f29;
+  cursor: pointer;
+}

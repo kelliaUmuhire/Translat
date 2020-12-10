@@ -4,6 +4,23 @@ img {
   /* max-height: 10%; */
 }
 
+.transl {
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  background: #f05454;
+  border-radius: 0 0 50% 0;
+  opacity: 0;
+  align-content: center;
+  transition: opacity 0.5s linear;
+}
+
+.transl img {
+  width: 45px;
+  height: 45px;
+}
+
 .options {
   transition: 0.5s ease;
   opacity: 0;
@@ -42,6 +59,14 @@ img {
   margin-top: 3px;
   color: #e23e57 !important;
 }
+
+.book-wrap {
+  margin: 3rem 0px 0px 10px;
+  max-width: 90%;
+  position: relative;
+  /* z-index: 10; */
+}
+
 .book-wrap:hover .options {
   opacity: 1;
   cursor: pointer;
@@ -51,11 +76,9 @@ img {
   opacity: 1;
 }
 
-.book-wrap {
-  margin: 3rem 0px 0px 10px;
-  max-width: 90%;
-  position: relative;
-  /* z-index: 10; */
+.book-wrap:hover .transl {
+  opacity: 1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .book {

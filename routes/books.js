@@ -70,6 +70,6 @@ router.get("/translatebooks", BookController.BookForTranslation);
 router.get("/getbylanguage", BookController.getByLanguage);
 router.get("/searchbook/:name", BookController.searchBook);
 
-router.post("/updatename", BookController.updateBookName);
+router.post("/updatefield", BookController.updateBookField);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import ProfileHeader from "./Parts/ProfileHeader";
+import ProfileHeader from "./Parts/ProfileHeader/ProfileHeader";
 // import { connect } from "react-redux";
 
 class Profile extends Component {
@@ -44,15 +44,21 @@ class Profile extends Component {
       })
       .catch((err) => console.log(err));
   }
+
+  // componentDidUpdate(){}
   render() {
     return (
       <div style={{ marginTop: "1rem" }}>
         <ProfileHeader
           name={this.state.profile.handle}
-          location={this.state.profile.location}
+          address={this.state.profile.location}
           picture={this.state.profile.image}
           library={this.state.library}
           tempBooks={this.state.tempBooks}
+          userId={this.state.profile.userId}
+          email={this.state.profile.email}
+          phone={this.state.profile.phoneNumber}
+          social={this.state.profile.social ? this.state.profile.social : {}}
         />
       </div>
     );

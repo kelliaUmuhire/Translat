@@ -25,7 +25,7 @@ router.get("/:userId", async (req, res) => {
 //@desc   Get user library //first searching the name then id
 //@access Public temporary
 router.get("/getbyname/:name", async (req, res) => {
-  User.findOne({ name: req.params.name })
+  await User.findOne({ name: req.params.name })
     .then((user) => {
       Library.findOne({ userId: user._id })
         .then((lib) => {
@@ -43,10 +43,14 @@ router.post(
   "/:bookId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    let temp = {
+      bookId: req.params.bookId,
+      translate: false,
+    };
     Library.findOne({ userId: req.user._id })
       .then((user) => {
         let newBooks = [...user.books];
-        newBooks.push(req.params.bookId);
+        newBooks.push(temp);
         Library.findByIdAndUpdate(
           { _id: user.id },
           { books: newBooks },

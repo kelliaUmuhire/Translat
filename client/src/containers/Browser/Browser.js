@@ -106,6 +106,7 @@ class Browser extends Component {
             book_url={book.bookURL}
             bookId={book._id}
             readonly={true}
+            isLibrary={false}
             notify={this.showNotification}
           />
         ))

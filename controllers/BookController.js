@@ -91,7 +91,7 @@ const BookController = {
   async getOne(req, res) {
     await Book.findById(
       { _id: req.params.bookId },
-      "_id title author bookCover bookURL"
+      "_id userId title author bookCover bookURL date bookLanguage translateLang"
     )
       .then((book) => {
         if (book) {
@@ -156,14 +156,14 @@ const BookController = {
     res.send(data);
   },
 
-  searchBook(req, res) {
+  async searchBook(req, res) {
     var regex = new RegExp(req.params.name, "i");
-    Book.find({ title: regex })
+    Book.find({ published: true, title: regex })
       .then((book) => res.send(book))
       .catch((err) => console.log(err));
   },
 
-  updateBookName(req, res) {
+  updateBookField(req, res) {
     Book.findByIdAndUpdate(
       { _id: req.body.bookId },
       { [req.body.field]: req.body.newvalue },

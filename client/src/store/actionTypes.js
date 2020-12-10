@@ -12,3 +12,5 @@ export const SET_BOOKS = "SET_BOOKS";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const GET_ERRORS = "GET_ERRORS";
 export const LOG_OUT = "LOG_OUT";
+
+export const SET_PROFILE = "SET_PROFILE";

@@ -1,5 +1,14 @@
-nav {
-  display: block;
+/* nav {
+  padding-bottom: 0 !important;
+} */
+
+.Navbar .profile-pic {
+  max-width: 33px;
+  max-height: 30px;
+}
+
+.Navbar .search {
+  margin-bottom: 0 !important;
 }
 
 .nav-link {
@@ -67,7 +76,7 @@ nav {
 .navbar-collapse {
   flex-basis: 100%;
   flex-grow: 1;
-  align-items: center;
+  text-align: center;
 }
 
 .navbar-toggler {
@@ -114,9 +123,7 @@ a:hover {
 
 #collapseOptions {
   position: absolute;
-  text-align: center;
   padding: 1rem;
-  vertical-align: middle;
   /* margin-right: 2rem; */
 }
 #collapseOptions ul {

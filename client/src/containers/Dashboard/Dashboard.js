@@ -78,7 +78,7 @@ class Dashboard extends Component {
     console.log(this.state.holder);
     if (this.state.holder !== "") {
       axios
-        .post("/api/books/updatename", {
+        .post("/api/books/updatefield", {
           bookId: bookId,
           newvalue: this.state.holder,
           field: e.target.getAttribute("name"),
@@ -91,10 +91,23 @@ class Dashboard extends Component {
 
   checkboxChange = (bookId, e) => {
     axios
-      .post("/api/books/updatename", {
+      .post("/api/books/updatefield", {
         bookId: bookId,
         newvalue: e.target.checked,
         field: "translate",
+      })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  onSelect = (bookId, e) => {
+    // axios.post()
+    console.log("Working");
+    axios
+      .post("/api/books/updatefield", {
+        bookId: bookId,
+        newvalue: e.target.value,
+        field: "translateLang",
       })
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err));
@@ -198,7 +211,7 @@ class Dashboard extends Component {
                   )}
                 >
                   Language for translation
-                  <span
+                  {/* <span
                     onDoubleClick={this.listenForDoubleClick}
                     contentEditable={this.state.edit}
                     value="translateLang"
@@ -208,7 +221,30 @@ class Dashboard extends Component {
                     suppressContentEditableWarning={true}
                   >
                     {book.translate ? book.translateLang : "No language"}
+                  </span> */}
+                  {/**translation lang */}
+                  <span className="col-auto my-1">
+                    <label
+                      className="mr-sm-2"
+                      for="inlineFormCustomSelect"
+                    ></label>
+                    <select
+                      className="custom-select mr-sm-2"
+                      id="inlineFormCustomSelect"
+                      onChange={(e) => this.onSelect(book._id, e)}
+                      name="translateLang"
+                    >
+                      <option value={book.translateLang} selected>
+                        {book.translateLang}
+                      </option>
+                      <option value="Kinyarwanda">Kinyarwanda</option>
+                      <option value="English">English</option>
+                      <option value="French">French</option>
+                      <option value="Swahili">Swahili</option>
+                      <option value="Spanish">Spanish</option>
+                    </select>
                   </span>
+                  {/**translation lang */}
                 </li>
               </ul>
             </div>

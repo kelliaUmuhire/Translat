@@ -1,0 +1,18 @@
+.ReadBook .previous {
+  position: fixed;
+  top: 50%;
+  z-index: 1999;
+  left: 10%;
+}
+
+.ReadBook .next {
+  position: fixed;
+  top: 50%;
+  z-index: 1999;
+  right: 10%;
+}
+
+.ReadBook #main {
+  margin-left: "12rem" !important;
+  justify-content: space-between;
+}

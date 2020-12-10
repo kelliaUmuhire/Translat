@@ -128,6 +128,13 @@ app.get("/searchusers/:name", async (req, res) => {
     .catch((err) => console.log(err));
 });
 
+//get one user
+app.get("/getuser/:userId", async (req, res) => {
+  User.findById({ _id: req.params.userId })
+    .then((user) => res.send(user))
+    .catch((err) => console.log(err));
+});
+
 //test post
 // app.post('/test',[
 //     body('name').not().isEmpty(),

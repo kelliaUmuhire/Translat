@@ -8,6 +8,10 @@ const LibrarySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  translate: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("library", LibrarySchema);

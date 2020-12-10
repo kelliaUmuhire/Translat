@@ -16,6 +16,7 @@ const FormGroup = ({ name, placeholder, value, error, icon, type, change }) => {
         name={name}
         placeholder={placeholder}
         onChange={change}
+        value={value}
       />
       <div className="invalid-feedback">{error}</div>
     </div>

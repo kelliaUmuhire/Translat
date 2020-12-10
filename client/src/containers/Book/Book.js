@@ -8,6 +8,7 @@ import _ from "lodash";
 
 import "./Book.css";
 import { addBookToLibrary, removeBook } from "../../store/actions/booksAction";
+import icon from "./icon.png";
 
 // import { data } from 'node-persist';
 
@@ -84,7 +85,7 @@ class Book extends Component {
 
     // }
     let addtolib = null;
-    let menu = (
+    let menu = this.props.inLibrary ? null : (
       <div>
         <Link to={this.getUrl()}>
           <i className="fas fa-book-open"></i>
@@ -104,10 +105,27 @@ class Book extends Component {
       </div>
     );
 
+    let transl =
+      this.props.inLibrary !== undefined && this.props.translate ? (
+        <div
+          className="transl"
+          onClick={this.connectToUser}
+          data-target="hover"
+          title="Translate book"
+          data-toggle="popover"
+          data-content="Translate the book"
+        >
+          <img src={icon} alt="translate" />
+        </div>
+      ) : null;
+
     if (this.props.readonly && this.props.library) {
       let index = this.props.library.books
-        ? this.props.library.books.indexOf(this.props.bookId)
+        ? this.props.library.books.findIndex(
+            (b) => b.bookId === this.props.bookId
+          )
         : null;
+      console.log(index);
       if (index === -1) {
         addtolib = (
           <div
@@ -119,6 +137,8 @@ class Book extends Component {
           </div>
         );
       }
+
+      console.log(this.props.inLibrary);
     }
     return (
       <div className="book-wrap">
@@ -135,6 +155,17 @@ class Book extends Component {
             <div className="edge">
               <div className="edge-border"></div>
             </div>
+            {this.props.inLibrary ? (
+              <div className="transl">
+                <a
+                  href={`#behind${this.props.bookId}`}
+                  data-toggle="collapse"
+                  data-target={`#behind${this.props.bookId}`}
+                >
+                  {transl}
+                </a>
+              </div>
+            ) : null}
           </div>
           <div className="options card rounded-left align-center">
             {menu}
