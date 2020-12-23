@@ -22,20 +22,20 @@ class EditProfile extends Component {
     twitter: "",
   };
   async componentDidMount() {
-    this.props.getprofile();
-    let index = this.props.profile.names.indexOf(" ");
-    console.log(this.props.profile.social);
-    this.setState({
-      fname: this.props.profile.names.substr(0, index),
-      lname: this.props.profile.names.substr(index + 1),
-      phone: this.props.profile.phoneNumber,
-      location: this.props.profile.location,
-      image: this.props.profile.image,
-      youtube: this.props.profile.social.youtube,
-      instagram: this.props.profile.social.instagram,
-      twitter: this.props.profile.social.twitter,
-      facebook: this.props.profile.social.facebook,
-    });
+    if (this.props.profile) {
+      let index = this.props.profile.names.indexOf(" ");
+      this.setState({
+        fname: this.props.profile.names.substr(0, index),
+        lname: this.props.profile.names.substr(index + 1),
+        phone: this.props.profile.phoneNumber,
+        location: this.props.profile.location,
+        image: this.props.profile.image,
+        youtube: this.props.profile.social.youtube,
+        instagram: this.props.profile.social.instagram,
+        twitter: this.props.profile.social.twitter,
+        facebook: this.props.profile.social.facebook,
+      });
+    }
   }
 
   saveChanges = (e) => {
@@ -91,7 +91,7 @@ class EditProfile extends Component {
                     this.getFileName(this.state.image)
                   }
                   alt="image"
-                  className="rounded-circle img-thumbnail"
+                  className="rounded-circle"
                 />
               </label>
               <input
@@ -214,7 +214,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getprofile: () => dispatch(setProfile()),
   savechanges: (newProfile) => dispatch(editProfile(newProfile)),
 });
 

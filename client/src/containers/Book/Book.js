@@ -88,7 +88,7 @@ class Book extends Component {
     let menu = this.props.inLibrary ? null : (
       <div>
         <Link to={this.getUrl()}>
-          <i className="fas fa-book-open"></i>
+          <i className="fas fa-book-open btnicon"></i>
         </Link>
         {this.props.readonly ? null : (
           <div
@@ -106,7 +106,7 @@ class Book extends Component {
     );
 
     let transl =
-      this.props.inLibrary !== undefined && this.props.translate ? (
+      this.props.inLibrary && this.props.translate ? (
         <div
           className="transl"
           onClick={this.connectToUser}
@@ -119,11 +119,18 @@ class Book extends Component {
         </div>
       ) : null;
 
+    let delet = this.props.inLibrary ? (
+      <div
+        className="removeFromLib"
+        onClick={() => this.props.removeFromLib(this.props.bookId)}
+      >
+        <i className="fas fa-times"></i>
+      </div>
+    ) : null;
+
     if (this.props.readonly && this.props.library) {
       let index = this.props.library.books
-        ? this.props.library.books.findIndex(
-            (b) => b.bookId === this.props.bookId
-          )
+        ? this.props.library.books.findIndex((b) => b === this.props.bookId)
         : null;
       console.log(index);
       if (index === -1) {
@@ -137,8 +144,6 @@ class Book extends Component {
           </div>
         );
       }
-
-      console.log(this.props.inLibrary);
     }
     return (
       <div className="book-wrap">
@@ -156,18 +161,21 @@ class Book extends Component {
               <div className="edge-border"></div>
             </div>
             {this.props.inLibrary ? (
-              <div className="transl">
-                <a
-                  href={`#behind${this.props.bookId}`}
-                  data-toggle="collapse"
-                  data-target={`#behind${this.props.bookId}`}
-                >
-                  {transl}
-                </a>
+              <div>
+                <div className="transl">
+                  <a
+                    href={`#behind${this.props.bookId}`}
+                    data-toggle="collapse"
+                    data-target={`#behind${this.props.bookId}`}
+                  >
+                    {transl}
+                  </a>
+                </div>
+                {delet}
               </div>
             ) : null}
           </div>
-          <div className="options card rounded-left align-center">
+          <div className="options align-center">
             {menu}
             {addtolib}
           </div>

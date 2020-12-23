@@ -100,6 +100,13 @@ export const addBookToLibrary = (book) => {
   };
 };
 
+export const removeFromLib = (book) => {
+  return {
+    type: actionTypes.REMOVE_BOOK_FROM_LIBRARY,
+    book: book,
+  };
+};
+
 // export const remove_book = (bookId) => dispatch => {
 //   return {
 //     type: actionTypes.REMOVE_FROM_DASH

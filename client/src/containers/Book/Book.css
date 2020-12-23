@@ -25,12 +25,13 @@ img {
   transition: 0.5s ease;
   opacity: 0;
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   background: transparent;
-  font-size: 5rem;
-  color: #e23e57;
+  /* font-size: 5rem; */
+  /* color: #e23e57; */
   transform: translate(-50%, -50%);
+  cursor: pointer;
 }
 
 /* .options { */
@@ -55,9 +56,14 @@ img {
   /* background: #000000c0; */
   /* padding: 10px 50px;
   border-radius: 50%; */
-  font-size: 2rem !important;
-  margin-top: 3px;
-  color: #e23e57 !important;
+  font-size: 1.5rem !important;
+  margin-top: 17px;
+  color: #f05454c5 !important;
+  transition: 0.2s;
+}
+
+.btnicon:hover {
+  color: #f05454 !important;
 }
 
 .book-wrap {
@@ -67,12 +73,26 @@ img {
   /* z-index: 10; */
 }
 
-.book-wrap:hover .options {
+.book-wrap .removeFromLib {
+  opacity: 0;
+  color: rgb(187, 79, 79);
+
+  transition: 0.5s;
+}
+/* .book-wrap:hover  {
   opacity: 1;
   cursor: pointer;
 }
 
-.book-wrap:hover .cover {
+.book-wrap:hover {
+  opacity: 1;
+} */
+.book-wrap:hover .options {
+  opacity: 1;
+}
+
+.book-wrap:hover .removeFromLib,
+.cover {
   opacity: 1;
 }
 

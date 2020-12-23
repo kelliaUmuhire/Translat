@@ -15,6 +15,7 @@ const reducer = (state = inititalState, action) => {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
+        profile: { ...state.profile },
       };
     case actionTypes.SET_PROFILE:
       return {
@@ -25,6 +26,7 @@ const reducer = (state = inititalState, action) => {
       return {
         ...state,
         errors: action.payload,
+        profile: { ...state.profile },
       };
 
     case actionTypes.LOG_OUT:

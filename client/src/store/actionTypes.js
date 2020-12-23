@@ -6,6 +6,7 @@ export const UPDATE_BOOK = "UPDATE_BOOK";
 
 export const ADD_LIBRARY = "ADD_LIBRARY";
 export const ADD_BOOK_TO_LIBRARY = "ADD_BOOK_TO_LIBRARY";
+export const REMOVE_BOOK_FROM_LIBRARY = "REMOVE_BOOK_FROM_LIBRARY";
 
 export const SET_BOOKS = "SET_BOOKS";
 

@@ -33,7 +33,7 @@ const ReadBook = (props) => {
   return (
     <div style={{ border: "2rem" }} className="ReadBook">
       <div
-        className="main"
+        className="main rounded"
         id="main"
         style={{
           marginLeft: "21rem",
@@ -45,7 +45,6 @@ const ReadBook = (props) => {
           // paddingTop: "5rem",
           // paddingBottom: "2rem",
         }}
-        className="rounded"
       >
         <Document file={loc} onLoadSuccess={onDocumentLoadSuccess}>
           <Page pageNumber={pageNumber}>

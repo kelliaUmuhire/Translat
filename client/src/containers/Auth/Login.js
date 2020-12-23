@@ -83,7 +83,7 @@ class Login extends Component {
                   type="email"
                   placeholder="Email"
                   icon="fas fa-at"
-                  value="email"
+                  value=""
                   change={this.onChange}
                   error={errors.email}
                   name="email"

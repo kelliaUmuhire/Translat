@@ -1,7 +1,8 @@
-import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 import authReducer from "./store/reducers/authReducer";
 import bookReducer from "./store/reducers/bookReducer";
@@ -24,18 +25,12 @@ const persistedReducer = persistReducer(persistConfig, allReducer);
 export const store = createStore(
   persistedReducer,
   initialState,
-  compose(
-    applyMiddleware(...middleware),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  composeWithDevTools(applyMiddleware(...middleware))
 );
 // export const store = createStore(
 //   allReducer,
 //   initialState,
-//   compose(
-//     applyMiddleware(...middleware),
-//     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-//   )
+//   composeWithDevTools(applyMiddleware(...middleware))
 // );
 export const persistor = persistStore(store);
-export default store;
+// export default store;

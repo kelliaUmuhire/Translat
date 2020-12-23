@@ -66,6 +66,14 @@ const reducer = (state = inititalState, action) => {
           books: [...state.library.books, action.payload],
         },
       };
+    case actionTypes.REMOVE_BOOK_FROM_LIBRARY:
+      return {
+        ...state,
+        library: {
+          ...state.library,
+          books: state.library.books.filter((b) => b !== action.book),
+        },
+      };
     case actionTypes.SET_BOOKS:
       return {
         ...state,

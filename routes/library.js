@@ -47,7 +47,7 @@ router.post(
       bookId: req.params.bookId,
       translate: false,
     };
-    Library.findOne({ userId: req.user._id })
+    Library.findOne({ userId: req.user.id })
       .then((user) => {
         let newBooks = [...user.books];
         newBooks.push(temp);
@@ -60,6 +60,31 @@ router.post(
             console.log("New book added!");
             res.send(lib);
           })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  }
+);
+
+//remove book from library
+router.post(
+  "/removebook/:bookId",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    // Library.findOneAndRemove(
+    //   { userId: req.user.id },
+    //   { $pull: { books: [req.params.bookId] } }
+    // )
+    await Library.findOne({ userId: req.user.id })
+      .then((lib) => {
+        let newBooks = [...lib.books];
+        newBooks = newBooks.filter((b) => b !== req.params.bookId);
+        Library.findByIdAndUpdate(
+          { _id: lib._id },
+          { books: newBooks },
+          { new: true }
+        )
+          .then((flib) => res.send({ success: true }))
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));

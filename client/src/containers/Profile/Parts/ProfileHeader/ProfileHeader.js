@@ -85,7 +85,7 @@ class ProfileHeader extends Component {
         await this.props.library.books.map((book) => {
           axios({
             method: "get",
-            url: `/api/books/getone/${book.bookId}`,
+            url: `/api/books/getone/${book}`,
           })
             .then((res) => {
               if (res.data !== "not") {

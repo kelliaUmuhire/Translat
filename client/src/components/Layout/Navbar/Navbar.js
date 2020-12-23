@@ -291,7 +291,7 @@ class Navbar extends Component {
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.auth.user,
-  profile: state.auth.profile,
+  profile: state.auth.profile!==undefined ? state.auth.profile:{},
 });
 
 const mapDispatchToProps = (dispatch) => ({

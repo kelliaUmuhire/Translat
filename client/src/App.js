@@ -10,7 +10,7 @@ import Navbar from "./components/Layout/Navbar/Navbar";
 import Ostroy from "./containers/Dashboard/Stories/Ostroy";
 import ReadBook from "./containers/Reader/ReadBook";
 import BookUpload from "./containers/Dashboard/Upload/BookUpload";
-import Library from "./containers/Librarys/Library/Library";
+import Library from "./containers/Library/Library";
 import Dashboard from "./containers/Dashboard/Dashboard";
 import Browser from "./containers/Browser/Browser";
 import Profile from "./containers/Profile/Profile";
